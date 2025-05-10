@@ -16,7 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         error_log("✅ DB接続成功");
 
         $stmt = $pdo->query("SELECT * FROM vtubers ORDER BY created_at DESC");
-        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // デバッグ用ログ出力（XAMPPなら C:\xampp\php\logs\php_error_log に出力されます）
+        error_log(print_r($data, true));
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        
     } catch (PDOException $e) {
         error_log("❌ DBエラー: " . $e->getMessage());
         http_response_code(500);

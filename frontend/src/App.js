@@ -1,12 +1,26 @@
 import React from "react";
-import VtuberList from "./components/VtuberList";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import TopPage from './pages/TopPage';
+import VtuberListPage from "./pages/VtuberListPage";
 
 function App() {
   return (
     <div className="App">
-      <h1 className="text-2xl font-bold mb-4">底辺Vtuberまとめサイト</h1>
-      <VtuberList />
+      {/* サイト全体のトップページを表示 */}
+      <Routes>
+        <Route path="/" element={<TopPage />} />
+        <Route path="/vtubers" element={<VtuberListPage />} />
+      </Routes>
+
+      {/* 必要なら個別のコンポーネントも表示 */}
+      {/* <VtuberList /> ← TopPage内に移す or 条件付きで表示でもOK */}
+      {/*<h1 className="text-2xl font-bold mb-4">底辺Vtuberまとめサイト</h1> */}
+      {/*<VtuberList />*/}
+
     </div>
+
+
+
   );
 }
 
