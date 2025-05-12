@@ -49,7 +49,7 @@ const VtuberList = () => {
                         />
                         <h3 className="text-lg font-semibold text-center">{v.name}</h3>
                         <p className="text-sm text-gray-500 text-center">{v.group}</p>
-                        <p className="text-xs text-gray-400 text-center">デビュー:4 {v.debut_date}</p>
+                        <p className="text-xs text-gray-400 text-center">デビュー: {v.debut_date}</p>
                     </div>
                 ))}
             </div>
