@@ -20,22 +20,6 @@ const VtuberList = () => {
 
     return (
         <SiteFrame>
-            <div className="p-4">
-                <h2 className="text-xl font-bold mb-2">Vtuber一覧</h2>
-                <ul>
-                    {vtubers.map((vtuber) => (
-                        <li key={vtuber.id} className="mb-4 p-4 border rounded shadow hover:shadow-md transition">
-                            <p className="text-xl font-bold text-indigo-700">{vtuber.name}</p>
-                            <p className="text-gray-700">{vtuber.description} {vtuber.debut_date}</p>
-
-                            {/* 🔽 ここに入れる！ */}
-                            {console.log("▶ vtuberデータ:", vtuber)}
-
-                            <a href={vtuber.youtube_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">YouTube</a>
-                        </li>
-                    ))}
-                </ul>
-            </div>
 
             <h2 className="text-2xl font-bold mb-6">Vtuber一覧</h2>
 
@@ -43,7 +27,7 @@ const VtuberList = () => {
                 {vtubers.map((v, index) => (
                     <div key={index} className="bg-white rounded shadow p-4 hover:bg-gray-50">
                         <img
-                            src={v.thumbnail_url}
+                            src={v.thumbnail_url ? `/images/${v.thumbnail_url}` : "/images/default.png"}
                             alt={v.name}
                             className="w-24 h-24 mx-auto rounded-full mb-4 object-cover"
                         />
