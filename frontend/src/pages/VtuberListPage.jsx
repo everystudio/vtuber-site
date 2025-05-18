@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // リンクを追加
 import SiteFrame from "../components/SiteFrame"; // サイト全体のレイアウトを定義したコンポーネント
 
 const VtuberList = () => {
@@ -25,7 +26,7 @@ const VtuberList = () => {
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {vtubers.map((v, index) => (
-                    <div key={index} className="bg-white rounded shadow p-4 hover:bg-gray-50">
+                    <Link to={`/vtuber/${v.id}`} key={index} className="bg-white rounded shadow p-4 hover:bg-gray-50">
                         <img
                             src={v.thumbnail_url ? `/images/${v.thumbnail_url}` : "/images/default.png"}
                             alt={v.name}
@@ -34,7 +35,7 @@ const VtuberList = () => {
                         <h3 className="text-lg font-semibold text-center">{v.name}</h3>
                         <p className="text-sm text-gray-500 text-center">{v.group}</p>
                         <p className="text-xs text-gray-400 text-center">デビュー: {v.debut_date}</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </SiteFrame>

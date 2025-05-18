@@ -9,6 +9,28 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
 // ✅ GET処理を最初に
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $id = $_GET['id'];
+    try {
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+        $stmt = $pdo->prepare("SELECT * FROM vtubers WHERE id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data) {
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(404);
+            echo json_encode(["error" => "Vtuber not found"]);
+        }
+    } catch (PDOException $e) {
+        error_log("❌ DBエラー: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(["error" => $e->getMessage()]);
+    }
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     error_log("🔥 GET処理に入りました");
     try {

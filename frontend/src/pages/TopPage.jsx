@@ -6,6 +6,7 @@ export default function TopPage() {
     const [articles, setArticles] = useState([]);
     const [ranking, setRanking] = useState([]);
     const [hotVtubers, setHotVtubers] = useState([]);
+    const [error, setError] = useState(null); // エラー状態を追加
 
     useEffect(() => {
         axios.get("http://localhost:8000/api/top.php")
@@ -18,11 +19,18 @@ export default function TopPage() {
             })
             .catch((err) => {
                 console.error("トップページデータの取得に失敗しました:", err);
+                setError("データの取得に失敗しました。後でもう一度お試しください。"); // エラーメッセージを設定
             });
     }, []);
 
     return (
         <SiteFrame>
+            {error && (
+                <div className="bg-red-100 text-red-700 p-4 rounded mb-4">
+                    {error}
+                </div>
+            )}
+
             {/* 注目まとめ記事 */}
             <section>
                 <h2 className="text-xl font-bold mb-4 border-b pb-2">📰 注目のまとめ記事</h2>

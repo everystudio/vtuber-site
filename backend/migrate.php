@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$db = 'your_db';
-$user = 'your_user';
-$pass = 'your_pass';
+$db = 'vtuber_db'; // 実際のデータベース名に変更
+$user = 'root'; // 実際のユーザー名に変更
+$pass = ''; // 実際のパスワードに変更
 $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
 
 $migrationsDir = __DIR__ . '/migrations';
