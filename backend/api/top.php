@@ -28,6 +28,9 @@ try {
         if (isset($article['tags']) && is_string($article['tags'])) {
             $article['tags'] = json_decode($article['tags'], true);
         }
+        else {
+            $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
+        }
     }
     unset($article); // 参照を解除
 

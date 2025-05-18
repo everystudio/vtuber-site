@@ -4,6 +4,7 @@ import TopPage from './pages/TopPage';
 import VtuberListPage from "./pages/VtuberListPage";
 import VtuberDetailPage from "./pages/VtuberDetailPage";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
+import ArticleFormPage from "./pages/ArticleFormPage";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
         <Route path="/vtubers" element={<VtuberListPage />} />
         <Route path="/vtuber/:id" element={<VtuberDetailPage />} />
         <Route path="/article/:id" element={<ArticleDetailPage />} />
+        <Route path="/article/new" element={<ArticleFormPage />} />
+        <Route path="/article/edit/:id" element={<ArticleFormPage />} />
       </Routes>
 
       {/* 必要なら個別のコンポーネントも表示 */}

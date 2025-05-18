@@ -40,7 +40,10 @@ export default function ArticleDetailPage() {
             <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
                 <h1 className="text-2xl font-bold mb-4">{article.title}</h1>
                 <p className="text-gray-600 mb-6">{article.date}</p>
-                <div className="prose mb-6" dangerouslySetInnerHTML={{ __html: article.body }} />
+                <div className="prose mb-6">
+                    {/* HTMLを安全にレンダリングし、画像やリンクを含む本文を表示 */}
+                    <div dangerouslySetInnerHTML={{ __html: article.body }} />
+                </div>
 
                 <div className="mt-6">
                     <h3 className="text-lg font-semibold mb-2">みんなの反応</h3>

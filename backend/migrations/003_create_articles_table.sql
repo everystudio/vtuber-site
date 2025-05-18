@@ -3,6 +3,7 @@ CREATE TABLE articles (
     vtuber_id INT NOT NULL,
     related_vtuber_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
     content TEXT NOT NULL,
     date DATE NOT NULL,
     tags JSON,
@@ -12,4 +13,7 @@ CREATE TABLE articles (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (vtuber_id) REFERENCES vtubers(id) ON DELETE CASCADE
 );
+
+ALTER TABLE articles
+ADD COLUMN IF NOT EXISTS body TEXT NOT NULL;
 
