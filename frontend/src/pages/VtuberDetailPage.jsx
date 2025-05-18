@@ -54,21 +54,26 @@ export default function VtuberDetailPage() {
                 <div className="mt-6">
                     <h3 className="text-lg font-semibold mb-2">関連話題</h3>
                     {articles.length > 0 ? (
-                        <ul className="list-disc pl-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             {articles.map(article => (
-                                <li key={article.id} className="mb-2">
-                                    <a href={`/articles/${article.id}`} className="text-blue-600 hover:underline">
+                                <div key={article.id} className="bg-white rounded shadow p-4">
+                                    <img
+                                        src={article.thumbnail_url ? `/images/${article.thumbnail_url}` : "/images/default.png"}
+                                        alt={article.title}
+                                        className="w-full h-32 object-cover rounded mb-2"
+                                    />
+                                    <a href={`/articles/${article.id}`} className="text-blue-600 hover:underline font-semibold block mb-1">
                                         {article.title}
                                     </a>
-                                    <p className="text-sm text-gray-500">{article.date}</p>
-                                    <div className="flex flex-wrap gap-2 mt-1">
+                                    <p className="text-sm text-gray-500 mb-2">{article.date}</p>
+                                    <div className="flex flex-wrap gap-2">
                                         {article.tags.map(tag => (
                                             <span key={tag} className="text-xs bg-gray-200 rounded px-2 py-1">{tag}</span>
                                         ))}
                                     </div>
-                                </li>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     ) : (
                         <p className="text-gray-500">関連する話題はありません。</p>
                     )}
