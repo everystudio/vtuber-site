@@ -38,7 +38,7 @@ export default function TopPage() {
                     {articles.map((article) => (
                         <article key={article.id} className="bg-white shadow rounded p-4 hover:bg-gray-50">
                             <h3 className="font-semibold text-lg mb-2">{article.title}</h3>
-                            <p className="text-sm text-gray-600">{article.date} ・ タグ: {article.tags.join(", ")}</p>
+                            <p className="text-sm text-gray-600">{article.date} ・ タグ: {(article.tags || []).join(", ")}</p>
                         </article>
                     ))}
                 </div>

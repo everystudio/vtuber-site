@@ -23,29 +23,30 @@ try {
     $stmt->execute();
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // $articlesの中のtagsを配列に変換
+    foreach ($articles as &$article) {
+        if (isset($article['tags']) && is_string($article['tags'])) {
+            $article['tags'] = json_decode($article['tags'], true);
+        }
+    }
+    unset($article); // 参照を解除
+
     // $articlesの中身をログに出力
     error_log(print_r($articles, true));
 
-    // サンプルデータ
+    // $articlesをレスポンスに置き換え
     $response = [
-    "articles" => [
-        [
-            "id" => 1,
-            "title" => "記事タイトル",
-            "date" => "2025/05/09",
-            "tags" => ["タグ1", "タグ2"]
-        ]
-    ],
-    "ranking" => [
-        [
-            "name" => "Vtuber名",
-            "growth" => "+1234人"
-        ]
-    ],
-    "hot_vtubers" => [
-        [
-            "name" => "カモ田ぴよ",
-            "thumbnail_url" => "kamota.jpg"
+        "articles" => $articles,
+        "ranking" => [
+            [
+                "name" => "Vtuber名",
+                "growth" => "+1234人"
+            ]
+        ],
+        "hot_vtubers" => [
+            [
+                "name" => "カモ田ぴよ",
+                "thumbnail_url" => "kamota.jpg"
             ]
         ],
     ];
