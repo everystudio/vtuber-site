@@ -34,7 +34,11 @@ try {
     // $articlesの中身をログに出力
     error_log(print_r($articles, true));
 
-    // $articlesをレスポンスに置き換え
+    // 最近登録されたVTuberを取得（idも含む）
+    $stmtHotVtubers = $pdo->query("SELECT id, name, thumbnail_url FROM vtubers ORDER BY created_at DESC LIMIT 5");
+    $hotVtubers = $stmtHotVtubers->fetchAll(PDO::FETCH_ASSOC);
+
+    // $responseのhot_vtubersを動的に設定
     $response = [
         "articles" => $articles,
         "ranking" => [
@@ -43,12 +47,7 @@ try {
                 "growth" => "+1234人"
             ]
         ],
-        "hot_vtubers" => [
-            [
-                "name" => "カモ田ぴよ",
-                "thumbnail_url" => "kamota.jpg"
-            ]
-        ],
+        "hot_vtubers" => $hotVtubers,
     ];
 
     // JSON データを出力
