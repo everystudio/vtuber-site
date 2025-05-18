@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import TopPage from './pages/TopPage';
 import VtuberListPage from "./pages/VtuberListPage";
 import VtuberDetailPage from "./pages/VtuberDetailPage";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<TopPage />} />
         <Route path="/vtubers" element={<VtuberListPage />} />
         <Route path="/vtuber/:id" element={<VtuberDetailPage />} />
+        <Route path="/article/:id" element={<ArticleDetailPage />} />
       </Routes>
 
       {/* 必要なら個別のコンポーネントも表示 */}

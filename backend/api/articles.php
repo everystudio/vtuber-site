@@ -9,10 +9,10 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
 
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$vtuber_id = isset($_GET['vtuber_id']) ? intval($_GET['vtuber_id']) : 0;
 
-if ($id <= 0) {
-    echo json_encode(['error' => '無効なIDです']);
+if ($vtuber_id <= 0) {
+    echo json_encode(['error' => '無効なvtuber_idです']);
     exit;
 }
 
@@ -20,8 +20,8 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
     error_log("✅ DB接続成功");
 
-    $stmt = $pdo->prepare('SELECT * FROM articles WHERE vtuber_id = :id');
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt = $pdo->prepare('SELECT * FROM articles WHERE vtuber_id = :vtuber_id');
+    $stmt->bindParam(':vtuber_id', $vtuber_id, PDO::PARAM_INT);
     $stmt->execute();
 
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);

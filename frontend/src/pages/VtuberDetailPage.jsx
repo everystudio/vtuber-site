@@ -15,7 +15,7 @@ export default function VtuberDetailPage() {
     }, [id]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/articles.php?id=${id}`)
+        axios.get(`http://localhost:8000/api/articles.php?vtuber_id=${id}`)
             .then(res => setArticles(res.data.articles || []))
             .catch(err => console.error("記事取得失敗:", err));
     }, [id]);
@@ -56,22 +56,24 @@ export default function VtuberDetailPage() {
                     {articles.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             {articles.map(article => (
-                                <div key={article.id} className="bg-white rounded shadow p-4">
-                                    <img
-                                        src={article.thumbnail_url ? `/images/${article.thumbnail_url}` : "/images/default.png"}
-                                        alt={article.title}
-                                        className="w-full h-32 object-cover rounded mb-2"
-                                    />
-                                    <a href={`/articles/${article.id}`} className="text-blue-600 hover:underline font-semibold block mb-1">
-                                        {article.title}
-                                    </a>
-                                    <p className="text-sm text-gray-500 mb-2">{article.date}</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {article.tags.map(tag => (
-                                            <span key={tag} className="text-xs bg-gray-200 rounded px-2 py-1">{tag}</span>
-                                        ))}
+                                <a href={`/article/${article.id}`} className="block">
+                                    <div key={article.id} className="bg-white rounded shadow p-4">
+                                        <img
+                                            src={article.thumbnail_url ? `/images/${article.thumbnail_url}` : "/images/default.png"}
+                                            alt={article.title}
+                                            className="w-full h-32 object-cover rounded mb-2"
+                                        />
+                                        <p className="text-blue-600 hover:underline font-semibold block mb-1">
+                                            {article.title}
+                                        </p>
+                                        <p className="text-sm text-gray-500 mb-2">{article.date}</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {article.tags.map(tag => (
+                                                <span key={tag} className="text-xs bg-gray-200 rounded px-2 py-1">{tag}</span>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             ))}
                         </div>
                     ) : (
