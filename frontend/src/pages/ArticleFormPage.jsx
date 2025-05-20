@@ -25,30 +25,37 @@ export default function ArticleFormPage() {
         if (id) {
             axios.get(`http://localhost:8000/api/articles.php?id=${id}`)
                 .then(res => {
-                    setTitle(res.data.title);
-                    setBody(res.data.body);
+                    setTitle(res.data.article.title);
+                    setBody(res.data.article.body);
                     // bodyのデータをエディタに反映（editorがreadyになってから）
-                    if (editor) {
-                        editor.commands.setContent(res.data.body);
+                    /*if (editor) {
+                        editor.commands.setContent(res.data.article.body);
                     }
+                        */
                 })
                 .catch(err => console.error("記事取得失敗:", err));
         }
     }, [id, editor]);
+
+    useEffect(() => {
+        if (editor && body) {
+            editor.commands.setContent(body);
+        }
+    }, [editor, body]);
 
     const handleSubmit = () => {
         const payload = { title, body, vtuber_id: 1 }; // 仮のVtuber ID
 
         if (id) {
             axios.put(`http://localhost:8000/api/articles.php?id=${id}`, payload)
-                .then(() => navigate(`/articles/${id}`))
+                .then(() => navigate(`/article/${id}`))
                 .catch(err => {
                     console.error("記事更新失敗:", err);
                     alert("記事の更新に失敗しました。もう一度お試しください。");
                 });
         } else {
             axios.post("http://localhost:8000/api/articles.php", payload)
-                .then(res => navigate(`/articles/${res.data.id}`))
+                .then(res => navigate(`/article/${res.data.id}`))
                 .catch(err => {
                     console.error("記事投稿失敗:", err);
                     alert("記事の投稿に失敗しました。もう一度お試しください。");

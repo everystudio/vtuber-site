@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // ← useNavigateを追加
 import axios from "axios";
 import SiteFrame from "../components/SiteFrame";
 
 export default function ArticleDetailPage() {
     const { id } = useParams();
+    const navigate = useNavigate(); // ← ナビゲーション用フック
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
 
     useEffect(() => {
         axios.get(`http://localhost:8000/api/articles.php?id=${id}`)
-            .then(res => setArticle(res.data))
+            .then(res => {
+                setArticle(res.data.article);
+                console.log("記事データ:", res.data); // デバッグ用ログ
+            })
             .catch(err => console.error("記事取得失敗:", err));
 
         axios.get(`http://localhost:8000/api/comments.php?article_id=${id}`)
@@ -33,13 +37,18 @@ export default function ArticleDetailPage() {
             .catch(err => console.error("コメント投稿失敗:", err));
     };
 
+    const handleArticleEdit = () => {
+        navigate(`/article/edit/${id}`); // ← 編集ページにリダイレクト
+    };
+
+
+
     if (!article) return <SiteFrame><p>読み込み中...</p></SiteFrame>;
 
     return (
         <SiteFrame>
             <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
                 <h1 className="text-2xl font-bold mb-4">{article.title}</h1>
-                <p className="text-gray-600 mb-6">{article.date}</p>
                 <div className="prose mb-6">
                     {/* HTMLを安全にレンダリングし、画像やリンクを含む本文を表示 */}
                     <div dangerouslySetInnerHTML={{ __html: article.body }} />
@@ -70,12 +79,20 @@ export default function ArticleDetailPage() {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="コメントを入力してください"
                     />
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                        onClick={handleCommentSubmit}
-                    >
-                        投稿
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            onClick={handleCommentSubmit}
+                        >
+                            コメント投稿
+                        </button>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            onClick={handleArticleEdit}
+                        >
+                            記事編集
+                        </button>
+                    </div>
                 </div>
             </div>
         </SiteFrame>

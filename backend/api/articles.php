@@ -41,7 +41,11 @@ try {
             else {
                 $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
             }
-            unset($article);      
+            //unset($article);
+
+            // 単体の記事をerror_logに出力
+            error_log(print_r($article, true));
+
             echo json_encode(['article' => $article]);
 
         } else if ($vtuber_id === 0) {

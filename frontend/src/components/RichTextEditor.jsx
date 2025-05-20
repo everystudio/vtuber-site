@@ -2,6 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import clsx from "clsx";
 import Image from '@tiptap/extension-image'
+import React, { useEffect } from "react";
 
 export default function RichTextEditor({ value, onChange }) {
     const editor = useEditor({
@@ -14,6 +15,13 @@ export default function RichTextEditor({ value, onChange }) {
             onChange(editor.getHTML());
         },
     });
+
+    // 🔽 追加: 親から渡された value が変わったら editor に反映する
+    useEffect(() => {
+        if (editor && value !== editor.getHTML()) {
+            editor.commands.setContent(value);
+        }
+    }, [value, editor]);
 
     if (!editor) return null;
 
