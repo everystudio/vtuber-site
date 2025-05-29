@@ -24,7 +24,16 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
+
+        // ページ単位で取得する場合
+        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 0;
+        $limit = isset($_GET['limit']) ? max(1, intval($_GET['limit'])) : 30;
+        $offset = ($page - 1) * $limit;
+
+        // 特定のvtuber_idで絞り込む場合
         $vtuber_id = isset($_GET['vtuber_id']) ? intval($_GET['vtuber_id']) : 0;
+
+        // 単体取得の場合
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
         if ($id > 0) {
@@ -48,23 +57,6 @@ try {
 
             echo json_encode(['article' => $article]);
 
-        } else if ($vtuber_id === 0) {
-            // 全件取得
-            error_log("🔥 全件取得処理に入りました");
-            $stmt = $pdo->query('SELECT * FROM articles ORDER BY created_at DESC');
-            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($articles as &$article) {
-                if (isset($article['tags']) && is_string($article['tags'])) {
-                    $article['tags'] = json_decode($article['tags'], true);
-                }
-                else {
-                    $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
-                }
-            }
-            unset($article);
-
-            echo json_encode(['articles' => $articles]);            
         } else if ($vtuber_id > 0) {
             // vtuber_idで絞り込んだ記事一覧を取得
             $stmt = $pdo->prepare('SELECT * FROM articles WHERE vtuber_id = :vtuber_id');
@@ -84,6 +76,50 @@ try {
             unset($article);
 
             echo json_encode(['articles' => $articles]);
+        } else if ($page > 0) {
+            // 総件数を取得
+            $countStmt = $pdo->query("SELECT COUNT(*) FROM articles");
+            $total = $countStmt->fetchColumn();
+
+            // 対象ページの記事を取得
+            $stmt = $pdo->prepare("SELECT id, title, created_at as date, tags FROM articles ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($articles as &$article) {
+                if (isset($article['tags']) && is_string($article['tags'])) {
+                    $article['tags'] = json_decode($article['tags'], true);
+                }
+                else {
+                    $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
+                }
+            }
+            unset($article);
+
+            echo json_encode([
+                'total' => $total,
+                'articles' => $articles,
+            ]);
+        } else if ($vtuber_id === 0) {
+            // 全件取得
+            error_log("🔥 全件取得処理に入りました");
+            $stmt = $pdo->query('SELECT * FROM articles ORDER BY created_at DESC');
+            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($articles as &$article) {
+                if (isset($article['tags']) && is_string($article['tags'])) {
+                    $article['tags'] = json_decode($article['tags'], true);
+                }
+                else {
+                    $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
+                }
+            }
+            unset($article);
+
+            echo json_encode(['articles' => $articles]);            
+
         } else {
             echo json_encode(['error' => 'パラメータが不足しています']);
         }

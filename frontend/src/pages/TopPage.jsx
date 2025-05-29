@@ -36,12 +36,24 @@ export default function TopPage() {
             <section>
                 <h2 className="text-xl font-bold mb-4 border-b pb-2">📰 注目のまとめ記事</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {articles.map((article) => (
-                        <Link to={`/article/${article.id}`} key={article.id} className="bg-white shadow rounded p-4 hover:bg-gray-50">
+                    {articles.slice(0, 6).map((article) => (
+                        <Link
+                            to={`/article/${article.id}`}
+                            key={article.id}
+                            className="bg-white shadow rounded p-4 hover:bg-gray-50"
+                        >
                             <h3 className="font-semibold text-lg mb-2">{article.title}</h3>
-                            <p className="text-sm text-gray-600">{article.date} ・ タグ: {(article.tags || []).join(", ")}</p>
+                            <p className="text-sm text-gray-600">
+                                {article.date} ・ タグ: {(article.tags || []).join(", ")}
+                            </p>
                         </Link>
                     ))}
+                </div>
+                {/* 記事一覧ページへのリンク */}
+                <div className="mt-4 text-right">
+                    <Link to="/articles" className="text-blue-600 hover:underline text-sm">
+                        もっと見る →
+                    </Link>
                 </div>
             </section>
 
