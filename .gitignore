@@ -6,3 +6,7 @@
 *.log
 .vscode/
 .idea/
+
+# backend
+/backend/uploads/*
+!/backend/uploads/.gitkeep

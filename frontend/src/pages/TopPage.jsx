@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SiteFrame from "../components/SiteFrame"; // サイト全体のレイアウトを定義したコンポーネント
+import { Link } from "react-router-dom"; // リンクを追加
 
 export default function TopPage() {
     const [articles, setArticles] = useState([]);
@@ -36,10 +37,10 @@ export default function TopPage() {
                 <h2 className="text-xl font-bold mb-4 border-b pb-2">📰 注目のまとめ記事</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {articles.map((article) => (
-                        <article key={article.id} className="bg-white shadow rounded p-4 hover:bg-gray-50">
+                        <Link to={`/article/${article.id}`} key={article.id} className="bg-white shadow rounded p-4 hover:bg-gray-50">
                             <h3 className="font-semibold text-lg mb-2">{article.title}</h3>
                             <p className="text-sm text-gray-600">{article.date} ・ タグ: {(article.tags || []).join(", ")}</p>
-                        </article>
+                        </Link>
                     ))}
                 </div>
             </section>
