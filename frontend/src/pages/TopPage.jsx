@@ -51,7 +51,7 @@ export default function TopPage() {
                 </div>
                 {/* 記事一覧ページへのリンク */}
                 <div className="mt-4 text-right">
-                    <Link to="/articles" className="text-blue-600 hover:underline text-sm">
+                    <Link to="/articles/1" className="text-blue-600 hover:underline text-sm">
                         もっと見る →
                     </Link>
                 </div>

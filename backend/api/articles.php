@@ -11,6 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// タグを処理するためのヘルパー関数
+function processTags(&$article) {
+    if (isset($article['tags']) && is_string($article['tags'])) {
+        $article['tags'] = json_decode($article['tags'], true);
+    } else {
+        $article['tags'] = ["未設定"]; // タグがない場合は未設定を設定
+    }
+}
+
 // DB接続共通処理
 $host = "127.0.0.1";
 $dbname = "vtuber_db";
@@ -41,23 +50,17 @@ try {
             error_log("🔥 単体取得処理に入りました");
             $stmt = $pdo->prepare('SELECT * FROM articles WHERE id = :id');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-            $article = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute();            $article = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($article && isset($article['tags']) && is_string($article['tags'])) {
-                $article['tags'] = json_decode($article['tags'], true);
-            }
-            else {
-                $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
+            if ($article) {
+                processTags($article);
             }
             //unset($article);
 
             // 単体の記事をerror_logに出力
             error_log(print_r($article, true));
 
-            echo json_encode(['article' => $article]);
-
-        } else if ($vtuber_id > 0) {
+            echo json_encode(['article' => $article]);        } else if ($vtuber_id > 0) {
             // vtuber_idで絞り込んだ記事一覧を取得
             $stmt = $pdo->prepare('SELECT * FROM articles WHERE vtuber_id = :vtuber_id');
             $stmt->bindParam(':vtuber_id', $vtuber_id, PDO::PARAM_INT);
@@ -66,12 +69,7 @@ try {
             $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($articles as &$article) {
-                if (isset($article['tags']) && is_string($article['tags'])) {
-                    $article['tags'] = json_decode($article['tags'], true);
-                }
-                else {
-                    $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
-                }
+                processTags($article);
             }
             unset($article);
 
@@ -85,16 +83,10 @@ try {
             $stmt = $pdo->prepare("SELECT id, title, created_at as date, tags FROM articles ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-            $stmt->execute();
-            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->execute();            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($articles as &$article) {
-                if (isset($article['tags']) && is_string($article['tags'])) {
-                    $article['tags'] = json_decode($article['tags'], true);
-                }
-                else {
-                    $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
-                }
+                processTags($article);
             }
             unset($article);
 
@@ -105,16 +97,10 @@ try {
         } else if ($vtuber_id === 0) {
             // 全件取得
             error_log("🔥 全件取得処理に入りました");
-            $stmt = $pdo->query('SELECT * FROM articles ORDER BY created_at DESC');
-            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $pdo->query('SELECT * FROM articles ORDER BY created_at DESC');            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($articles as &$article) {
-                if (isset($article['tags']) && is_string($article['tags'])) {
-                    $article['tags'] = json_decode($article['tags'], true);
-                }
-                else {
-                    $article['tags'] = ["未設定"]; // タグがない場合は空の配列を設定
-                }
+                processTags($article);
             }
             unset($article);
 
