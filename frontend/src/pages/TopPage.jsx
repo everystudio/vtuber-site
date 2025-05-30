@@ -6,17 +6,17 @@ import { Link } from "react-router-dom"; // リンクを追加
 export default function TopPage() {
     const [articles, setArticles] = useState([]);
     const [ranking, setRanking] = useState([]);
-    const [hotVtubers, setHotVtubers] = useState([]);
+    const [hotLivers, setHotLivers] = useState([]); // hotVtubersをhotLiversに変更
     const [error, setError] = useState(null); // エラー状態を追加
 
     useEffect(() => {
         axios.get("http://localhost:8000/api/top.php")
             .then((res) => {
-                const { articles, ranking, hot_vtubers } = res.data;
+                const { articles, ranking, hot_livers } = res.data; // hot_vtubersをhot_liversに変更
                 console.log("APIから取得したデータ:", res.data); // デバッグ用ログ
                 setArticles(articles);
                 setRanking(ranking);
-                setHotVtubers(hot_vtubers);
+                setHotLivers(hot_livers); // hotVtubersをhotLiversに変更
             })
             .catch((err) => {
                 console.error("トップページデータの取得に失敗しました:", err);
@@ -59,29 +59,29 @@ export default function TopPage() {
 
             {/* 人気ランキング */}
             <section>
-                <h2 className="text-xl font-bold mb-4 border-b pb-2">🔥 人気Vtuberランキング（今週）</h2>
+                <h2 className="text-xl font-bold mb-4 border-b pb-2">🔥 人気Liverランキング（今週）</h2> {/* VtuberをLiverに変更 */}
                 <ol className="space-y-2">
-                    {ranking.map((vtuber, idx) => (
+                    {ranking.map((liver, idx) => (
                         <li key={idx} className="flex justify-between border-b py-1">
-                            <span>{idx + 1}. {vtuber.name}</span>
-                            <span className="text-sm text-gray-500">{vtuber.growth}</span>
+                            <span>{idx + 1}. {liver.name}</span>
+                            <span className="text-sm text-gray-500">{liver.growth}</span>
                         </li>
                     ))}
                 </ol>
             </section>
 
-            {/* 話題のVtuber */}
+            {/* 話題のLiver */}
             <section>
-                <h2 className="text-xl font-bold mb-4 border-b pb-2">👀 話題のVtuber</h2>
+                <h2 className="text-xl font-bold mb-4 border-b pb-2">👀 話題のLiver</h2> {/* VtuberをLiverに変更 */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {hotVtubers.map((vtuber, idx) => (
+                    {hotLivers.map((liver, idx) => (
                         <div key={idx} className="text-center">
                             <img
-                                src={vtuber.thumbnail_url ? `/images/${vtuber.thumbnail_url}` : "/images/default.png"}
-                                alt={vtuber.name}
+                                src={liver.thumbnail_url ? `/images/${liver.thumbnail_url}` : "/images/default.png"}
+                                alt={liver.name}
                                 className="rounded-full w-24 h-24 mx-auto mb-2"
                             />
-                            <p className="text-sm font-medium">{vtuber.name}</p>
+                            <p className="text-sm font-medium">{liver.name}</p>
                         </div>
                     ))}
                 </div>

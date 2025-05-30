@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import TopPage from './pages/TopPage';
-import VtuberListPage from "./pages/VtuberListPage";
-import VtuberDetailPage from "./pages/VtuberDetailPage";
+import LiverListPage from "./pages/LiverListPage"; // VtuberListPageをLiverListPageに変更
+import LiverDetailPage from "./pages/LiverDetailPage"; // VtuberDetailPageをLiverDetailPageに変更
 import ArticleListPage from "./pages/ArticleListPage";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
 import ArticleFormPage from "./pages/ArticleFormPage";
@@ -13,8 +13,8 @@ function App() {
       {/* サイト全体のトップページを表示 */}
       <Routes>
         <Route path="/" element={<TopPage />} />
-        <Route path="/vtubers" element={<VtuberListPage />} />
-        <Route path="/vtuber/:id" element={<VtuberDetailPage />} />
+        <Route path="/livers" element={<LiverListPage />} /> {/* VtuberListPageをLiverListPageに変更 */}
+        <Route path="/liver/:id" element={<LiverDetailPage />} /> {/* VtuberDetailPageをLiverDetailPageに変更 */}
         <Route path="/articles/:page" element={<ArticleListPage />} />
         <Route path="/article/:id" element={<ArticleDetailPage />} />
         <Route path="/article/new" element={<ArticleFormPage />} />

@@ -3,15 +3,15 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import SiteFrame from "../components/SiteFrame";
 
-const LiverList = () => { // VtuberListをLiverListに変更
-    const [livers, setLivers] = useState([]); // vtubersをliversに変更
+const LiverList = () => {
+    const [livers, setLivers] = useState([]);
 
     useEffect(() => {
         console.log("APIを呼び出します");
         axios.get("http://localhost:8000/api/vtubers.php")
             .then((res) => {
                 console.log("APIからのレスポンス:", res.data);
-                setLivers(res.data); // vtubersをliversに変更
+                setLivers(res.data);
             })
             .catch((err) => {
                 console.error("API呼び出しに失敗しました:", err);
@@ -22,11 +22,11 @@ const LiverList = () => { // VtuberListをLiverListに変更
     return (
         <SiteFrame>
 
-            <h2 className="text-2xl font-bold mb-6">Liver一覧</h2> {/* Vtuber一覧をLiver一覧に変更 */}
+            <h2 className="text-2xl font-bold mb-6">Liver一覧</h2>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {livers.map((l, index) => (
-                    <Link to={`/liver/${l.id}`} key={index} className="bg-white rounded shadow p-4 hover:bg-gray-50"> {/* vtuberをliverに変更 */}
+                    <Link to={`/liver/${l.id}`} key={index} className="bg-white rounded shadow p-4 hover:bg-gray-50">
                         <img
                             src={l.thumbnail_url ? `/images/${l.thumbnail_url}` : "/images/default.png"}
                             alt={l.name}

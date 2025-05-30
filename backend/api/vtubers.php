@@ -1,6 +1,6 @@
 <?php
 $host = "127.0.0.1";
-$dbname = "vtuber_db";
+$dbname = "liver_db"; // データベース名を変更
 $user = "root";
 $pass = "";
 
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
     try {
         $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-        $stmt = $pdo->prepare("SELECT * FROM vtubers WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT * FROM livers WHERE id = ?");
         $stmt->execute([$id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
         } else {
             http_response_code(404);
-            echo json_encode(["error" => "Vtuber not found"]);
+            echo json_encode(["error" => "Liver not found"]);
         }
     } catch (PDOException $e) {
         error_log("❌ DBエラー: " . $e->getMessage());
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
         error_log("✅ DB接続成功");
 
-        $stmt = $pdo->query("SELECT * FROM vtubers ORDER BY created_at DESC");
+        $stmt = $pdo->query("SELECT * FROM livers ORDER BY created_at DESC");
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // デバッグ用ログ出力（XAMPPなら C:\xampp\php\logs\php_error_log に出力されます）
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-        $stmt = $pdo->prepare("INSERT INTO vtubers (name, youtube_url, description) VALUES (?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO livers (name, youtube_url, description) VALUES (?, ?, ?)");
         $stmt->execute([$name, $youtube, $desc]);
         echo json_encode(["success" => true, "id" => $pdo->lastInsertId()]);
     } catch (PDOException $e) {
