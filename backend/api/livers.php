@@ -40,6 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($data) {
+            // プラットフォームIDを取得して追加
+            $stmt2 = $pdo->prepare("SELECT platform_id FROM liver_platform WHERE liver_id = ?");
+            $stmt2->execute([$id]);
+            $platform_ids = $stmt2->fetchAll(PDO::FETCH_COLUMN);
+            $data['platform_ids'] = $platform_ids;
+
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
         } else {
             http_response_code(404);
@@ -61,6 +67,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $stmt = $pdo->query("SELECT * FROM livers ORDER BY created_at DESC");
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // 各ライバーのplatformsを取得
+        foreach ($data as &$liver) {
+            $stmt2 = $pdo->prepare("
+                SELECT p.name
+                FROM liver_platform lp
+                JOIN platforms p ON lp.platform_id = p.id
+                WHERE lp.liver_id = ?
+            ");
+            $stmt2->execute([$liver['id']]);
+            $platforms = $stmt2->fetchAll(PDO::FETCH_COLUMN);
+            $liver['platforms'] = $platforms;
+        }
 
         // デバッグ用ログ出力（XAMPPなら C:\xampp\php\logs\php_error_log に出力されます）
         error_log(print_r($data, true));

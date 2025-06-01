@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import SiteFrame from "../../components/SiteFrame";
+import AdminFrame from "../../components/AdminFrame";
 
 export default function AdminLiverFormPage() {
     const navigate = useNavigate();
@@ -90,7 +90,7 @@ export default function AdminLiverFormPage() {
     };
 
     return (
-        <SiteFrame>
+        <AdminFrame>
             <div className="max-w-xl mx-auto p-6">
                 <h1 className="text-2xl font-bold mb-4">🎤 ライバー新規登録</h1>
 
@@ -158,11 +158,25 @@ export default function AdminLiverFormPage() {
                         <input type="date" value={debutDate} onChange={(e) => setDebutDate(e.target.value)} className="w-full border px-3 py-2 rounded" />
                     </div>
 
-                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        登録する
-                    </button>
+
+                    <div className="flex gap-4">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        >
+                            登録する
+                        </button>
+
+                        <button
+                            type="button"
+                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                            onClick={() => navigate("/admin/livers")}
+                        >
+                            キャンセル
+                        </button>
+                    </div>
                 </form>
             </div>
-        </SiteFrame>
+        </AdminFrame>
     );
 }

@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import SiteFrame from "../../components/SiteFrame"; // 管理画面でも共通で使う場合
+import AdminFrame from "../../components/AdminFrame"; // 管理画面でも共通で使う場合
 
 export default function AdminDashboard() {
     return (
-        <SiteFrame>
+        <AdminFrame>
             <div className="max-w-3xl mx-auto p-6">
                 <h1 className="text-2xl font-bold mb-4">🔧 管理ダッシュボード</h1>
 
@@ -27,6 +27,6 @@ export default function AdminDashboard() {
                     </li>
                 </ul>
             </div>
-        </SiteFrame>
+        </AdminFrame>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import SiteFrame from "../../components/SiteFrame";
+import AdminFrame from "../../components/AdminFrame";
 
 export default function AdminLiverListPage() {
     const [livers, setLivers] = useState([]);
@@ -19,7 +19,7 @@ export default function AdminLiverListPage() {
     }, []);
 
     return (
-        <SiteFrame>
+        <AdminFrame>
             <div className="max-w-4xl mx-auto p-6">
                 <h1 className="text-2xl font-bold mb-4">🎤 ライバー一覧（管理）</h1>
 
@@ -39,6 +39,7 @@ export default function AdminLiverListPage() {
                         <tr className="bg-gray-100">
                             <th className="border px-4 py-2">ID</th>
                             <th className="border px-4 py-2">名前</th>
+                            <th className="border px-4 py-2">Platform</th>
                             <th className="border px-4 py-2">グループ</th>
                             <th className="border px-4 py-2">デビュー日</th>
                             <th className="border px-4 py-2">操作</th>
@@ -49,6 +50,11 @@ export default function AdminLiverListPage() {
                             <tr key={liver.id}>
                                 <td className="border px-4 py-2">{liver.id}</td>
                                 <td className="border px-4 py-2">{liver.name}</td>
+                                <td className="border px-4 py-2">
+                                    {liver.platforms && liver.platforms.length > 0
+                                        ? liver.platforms.join(", ")
+                                        : "―"}
+                                </td>
                                 <td className="border px-4 py-2">{liver.group_id}</td>
                                 <td className="border px-4 py-2">{liver.debut_date}</td>
                                 <td className="border px-4 py-2 text-center">
@@ -64,6 +70,6 @@ export default function AdminLiverListPage() {
                     </tbody>
                 </table>
             </div>
-        </SiteFrame>
+        </AdminFrame>
     );
 }

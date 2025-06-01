@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import SiteFrame from "../../components/SiteFrame";
+import AdminFrame from "../../components/AdminFrame";
 
 export default function AdminLiverEditPage() {
     const navigate = useNavigate();
@@ -116,7 +116,7 @@ export default function AdminLiverEditPage() {
     };
 
     return (
-        <SiteFrame>
+        <AdminFrame>
             <div className="max-w-xl mx-auto p-6">
                 <h1 className="text-2xl font-bold mb-4">🎤 ライバー編集</h1>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -148,17 +148,20 @@ export default function AdminLiverEditPage() {
 
                     <div>
                         <label className="block font-semibold mb-1">プラットフォーム</label>
-                        {platformOptions.map((platform) => (
-                            <label key={platform.id} className="block">
-                                <input
-                                    type="checkbox"
-                                    value={platform.id}
-                                    checked={platforms.includes(platform.id)}
-                                    onChange={() => togglePlatform(platform.id)}
-                                />
-                                <span className="ml-2">{platform.name}</span>
-                            </label>
-                        ))}
+                        <div className="flex flex-wrap gap-4">
+                            {platformOptions.map((platform) => (
+                                <label key={platform.id} className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        value={platform.id}
+                                        checked={platforms.includes(platform.id)}
+                                        onChange={() => togglePlatform(platform.id)}
+                                    />
+                                    <span>{platform.name}</span>
+                                </label>
+                            ))}
+                        </div>
+
                     </div>
 
                     <div>
@@ -183,11 +186,24 @@ export default function AdminLiverEditPage() {
                         <input type="date" value={debutDate} onChange={(e) => setDebutDate(e.target.value)} className="w-full border px-3 py-2 rounded" />
                     </div>
 
-                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        登録する
-                    </button>
+                    <div className="flex gap-4">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        >
+                            更新する
+                        </button>
+
+                        <button
+                            type="button"
+                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                            onClick={() => navigate("/admin/livers")}
+                        >
+                            キャンセル
+                        </button>
+                    </div>
                 </form>
             </div>
-        </SiteFrame>
+        </AdminFrame>
     );
 }
