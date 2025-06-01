@@ -13,6 +13,7 @@ import ArticleFormPage from "./pages/ArticleFormPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLiverListPage from "./pages/admin/AdminLiverListPage";
 import AdminLiverFormPage from "./pages/admin/AdminLiverFormPage";
+import AdminLiverEditPage from "./pages/admin/AdminLiverEditPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/livers" element={<AdminLiverListPage />} />
         <Route path="/admin/livers/new" element={<AdminLiverFormPage />} />
+        <Route path="/admin/livers/:id/edit" element={<AdminLiverEditPage />} />
         {/* <Route path="/admin/articles" element={<AdminArticleListPage />} /> */}
         {/* <Route path="/admin/livers" element={<AdminLiverListPage />} /> */}
 

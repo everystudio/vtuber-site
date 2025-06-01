@@ -123,6 +123,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
+// ✅ PUT処理（ライバーの編集）
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    error_log("🔥 PUT処理に入りました");
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $id = $data['id'] ?? null;
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(['error' => 'IDが指定されていません']);
+        exit();
+    }
+
+    $youtubeUrl = !empty($data['youtube_url']) ? $data['youtube_url'] : null;
+    $debutDate = !empty($data['debut_date']) ? $data['debut_date'] : null;
+    $groupId = !empty($data['group_id']) ? $data['group_id'] : null;
+
+    // 更新
+    $stmt = $pdo->prepare("UPDATE livers SET
+        name = :name,
+        group_id = :group_id,
+        description = :description,
+        youtube_url = :youtube_url,
+        thumbnail_url = :thumbnail_url,
+        debut_date = :debut_date
+        WHERE id = :id
+    ");
+
+    $success = $stmt->execute([
+        ':name' => $data['name'],
+        ':group_id' => $groupId,
+        ':description' => $data['description'],
+        ':youtube_url' => $youtubeUrl,
+        ':thumbnail_url' => $data['thumbnail_url'],
+        ':debut_date' => $debutDate,
+        ':id' => $id,
+    ]);
+
+    if (!$success) {
+        error_log("❌ UPDATE失敗: " . print_r($stmt->errorInfo(), true));
+        http_response_code(500);
+        echo json_encode(['error' => '更新に失敗しました']);
+        exit();
+    }
+
+    // 中間テーブル更新
+    $pdo->prepare("DELETE FROM liver_platform WHERE liver_id = ?")->execute([$id]);
+
+    if (!empty($data['platform_ids']) && is_array($data['platform_ids'])) {
+        $stmt = $pdo->prepare("INSERT INTO liver_platform (liver_id, platform_id) VALUES (:liver_id, :platform_id)");
+        foreach ($data['platform_ids'] as $platformId) {
+            $result = $stmt->execute([
+                ':liver_id' => $id,
+                ':platform_id' => $platformId
+            ]);
+
+            if (!$result) {
+                error_log("❌ liver_platformへの再INSERT失敗: liver_id={$id}, platform_id={$platformId}");
+                error_log("詳細: " . print_r($stmt->errorInfo(), true));
+            }
+        }
+    }
+
+    echo json_encode(['success' => true]);
+    exit();
+}
+
 // ✅ その他のリクエスト（PUTなど）は拒否
 http_response_code(405);
 echo json_encode(["error" => "Method Not Allowed"]);
