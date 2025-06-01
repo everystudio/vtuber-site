@@ -22,7 +22,7 @@ function processTags(&$article) {
 
 // DB接続共通処理
 $host = "127.0.0.1";
-$dbname = "vtuber_db";
+$dbname = "liver_db"; // データベース名を変更
 $user = "root";
 $pass = "";
 
@@ -39,8 +39,8 @@ try {
         $limit = isset($_GET['limit']) ? max(1, intval($_GET['limit'])) : 30;
         $offset = ($page - 1) * $limit;
 
-        // 特定のvtuber_idで絞り込む場合
-        $vtuber_id = isset($_GET['vtuber_id']) ? intval($_GET['vtuber_id']) : 0;
+        // 特定のliver_idで絞り込む場合
+        $liver_id = isset($_GET['liver_id']) ? intval($_GET['liver_id']) : 0;
 
         // 単体取得の場合
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -60,10 +60,10 @@ try {
             // 単体の記事をerror_logに出力
             error_log(print_r($article, true));
 
-            echo json_encode(['article' => $article]);        } else if ($vtuber_id > 0) {
-            // vtuber_idで絞り込んだ記事一覧を取得
-            $stmt = $pdo->prepare('SELECT * FROM articles WHERE vtuber_id = :vtuber_id');
-            $stmt->bindParam(':vtuber_id', $vtuber_id, PDO::PARAM_INT);
+            echo json_encode(['article' => $article]);        } else if ($liver_id > 0) {
+            // liver_idで絞り込んだ記事一覧を取得
+            $stmt = $pdo->prepare('SELECT * FROM articles WHERE liver_id = :liver_id');
+            $stmt->bindParam(':liver_id', $liver_id, PDO::PARAM_INT);
             $stmt->execute();
 
             $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -94,7 +94,7 @@ try {
                 'total' => $total,
                 'articles' => $articles,
             ]);
-        } else if ($vtuber_id === 0) {
+        } else if ($liver_id === 0) {
             // 全件取得
             error_log("🔥 全件取得処理に入りました");
             $stmt = $pdo->query('SELECT * FROM articles ORDER BY created_at DESC');            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -115,14 +115,14 @@ try {
         $title = $data['title'] ?? '';
         $body = $data['body'] ?? '';
         $created_at = date('Y-m-d H:i:s');
-        $vtuber_id = $data['vtuber_id'] ?? null;
+        $liver_id = $data['liver_id'] ?? null;
 
 
-        $stmt = $pdo->prepare("INSERT INTO articles (title, body, created_at, vtuber_id) VALUES (:title, :body, :created_at, :vtuber_id)");
+        $stmt = $pdo->prepare("INSERT INTO articles (title, body, created_at, liver_id) VALUES (:title, :body, :created_at, :liver_id)");
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':body', $body);
         $stmt->bindParam(':created_at', $created_at);
-        $stmt->bindParam(':vtuber_id', $vtuber_id, PDO::PARAM_INT);
+        $stmt->bindParam(':liver_id', $liver_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             echo json_encode(['id' => $pdo->lastInsertId()]);

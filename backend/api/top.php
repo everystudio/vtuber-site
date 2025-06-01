@@ -1,6 +1,6 @@
 <?php
 $host = "127.0.0.1";
-$dbname = "vtuber_db";
+$dbname = "liver_db"; // データベース名を変更
 $user = "root";
 $pass = "";
 
@@ -19,7 +19,7 @@ try {
     error_log("🔥 top.php: プログラムが通過しました");
 
     // SQL クエリ
-    $stmt = $pdo->prepare("SELECT id, vtuber_id, related_vtuber_id, title, content, date, tags, likes, thumbnail_url FROM articles");
+    $stmt = $pdo->prepare("SELECT id, liver_id, related_liver_id, title, content, date, tags, likes, thumbnail_url FROM articles");
     $stmt->execute();
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -37,11 +37,11 @@ try {
     // $articlesの中身をログに出力
     error_log(print_r($articles, true));
 
-    // 最近登録されたVTuberを取得（idも含む）
-    $stmtHotVtubers = $pdo->query("SELECT id, name, thumbnail_url FROM vtubers ORDER BY created_at DESC LIMIT 5");
-    $hotVtubers = $stmtHotVtubers->fetchAll(PDO::FETCH_ASSOC);
+    // 最近登録されたLiverを取得（idも含む）
+    $stmtHotLivers = $pdo->query("SELECT id, name, thumbnail_url FROM livers ORDER BY created_at DESC LIMIT 5");
+    $hotLivers = $stmtHotLivers->fetchAll(PDO::FETCH_ASSOC);
 
-    // $responseのhot_vtubersを動的に設定
+    // $responseのhot_liversを動的に設定
     $response = [
         "articles" => $articles,
         "ranking" => [
@@ -50,7 +50,7 @@ try {
                 "growth" => "+1234人"
             ]
         ],
-        "hot_vtubers" => $hotVtubers,
+        "hot_livers" => $hotLivers,
     ];
 
     // JSON データを出力

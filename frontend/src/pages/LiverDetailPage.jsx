@@ -3,31 +3,31 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import SiteFrame from "../components/SiteFrame";
 
-export default function LiverDetailPage() { // VtuberDetailPageをLiverDetailPageに変更
+export default function LiverDetailPage() {
     const { id } = useParams();
-    const [liver, setLiver] = useState(null); // vtuberをliverに変更
+    const [liver, setLiver] = useState(null);
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
         axios.get(`http://localhost:8000/api/vtubers.php?id=${id}`)
-            .then(res => setLiver(res.data)) // vtuberをliverに変更
+            .then(res => setLiver(res.data))
             .catch(err => console.error("ライバー詳細取得失敗:", err));
     }, [id]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/articles.php?liver_id=${id}`) // vtuber_idをliver_idに変更
+        axios.get(`http://localhost:8000/api/articles.php?liver_id=${id}`)
             .then(res => setArticles(res.data.articles || []))
             .catch(err => console.error("記事取得失敗:", err));
     }, [id]);
 
-    if (!liver) return <SiteFrame><p>読み込み中...</p></SiteFrame>; // vtuberをliverに変更
+    if (!liver) return <SiteFrame><p>読み込み中...</p></SiteFrame>;
 
     return (
         <SiteFrame>
             <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
                 <div className="flex flex-col items-center">
                     <img
-                        src={liver.thumbnail_url ? `/images/${liver.thumbnail_url}` : "/images/default.png"} // vtuberをliverに変更
+                        src={liver.thumbnail_url ? `/images/${liver.thumbnail_url}` : "/images/default.png"}
                         alt={liver.name}
                         className="w-32 h-32 rounded-full mb-4 object-cover"
                     />
