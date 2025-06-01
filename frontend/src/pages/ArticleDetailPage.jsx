@@ -47,14 +47,42 @@ export default function ArticleDetailPage() {
 
     return (
         <SiteFrame>
-            <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
-                <h1 className="text-2xl font-bold mb-4">{article.title}</h1>
-                <div className="prose mb-6">
+            <div className="max-w-3xl mx-auto px-4 py-6 space-y-6 bg-white rounded shadow">
+                {/* タグ + コメント */}
+                <div className="flex justify-between items-center">
+                    <div className="space-x-2">
+                        {article.tags.map(tag => (
+                            <span key={tag} className="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                                #{tag}
+                            </span>
+                        ))}
+                    </div>
+                    {article.commentCount > 0 && (
+                        <div className="text-pink-500 text-sm">
+                            💬 {article.commentCount}
+                        </div>
+                    )}
+                </div>
+
+                {/* 投稿日 */}
+                <div className="text-sm text-gray-500">{article.date}</div>
+
+                {/* タイトル */}
+                <h1 className="text-2xl font-bold text-red-700 leading-snug">
+                    {article.title}
+                </h1>
+
+                {/* サムネイル画像 */}
+                <img src={article.thumbnailUrl} alt="記事サムネイル" className="w-full rounded shadow" />
+
+                {/* 本文 */}
+                <div className="prose max-w-none text-base leading-relaxed text-gray-800">
                     {/* HTMLを安全にレンダリングし、画像やリンクを含む本文を表示 */}
                     <div dangerouslySetInnerHTML={{ __html: article.body }} />
                 </div>
 
-                <div className="mt-6">
+                {/* コメント一覧 */}
+                <div className="mt-8">
                     <h3 className="text-lg font-semibold mb-2">みんなの反応</h3>
                     {comments.length > 0 ? (
                         <ul className="space-y-4">
@@ -70,6 +98,7 @@ export default function ArticleDetailPage() {
                     )}
                 </div>
 
+                {/* コメント投稿欄 */}
                 <div className="mt-6">
                     <h3 className="text-lg font-semibold mb-2">コメントを投稿</h3>
                     <textarea
@@ -86,15 +115,10 @@ export default function ArticleDetailPage() {
                         >
                             コメント投稿
                         </button>
-                        <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
-                            onClick={handleArticleEdit}
-                        >
-                            記事編集
-                        </button>
                     </div>
                 </div>
             </div>
+
         </SiteFrame>
     );
 }

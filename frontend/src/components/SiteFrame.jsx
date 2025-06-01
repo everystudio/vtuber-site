@@ -10,7 +10,10 @@ export default function Layout({ children }) {
                 <nav className="space-x-4 text-gray-700">
                     <a href="/" className="hover:underline">ホーム</a>
                     <Link to="/livers" className="hover:underline">Liver一覧</Link>
+                    <a href="/articles/1" className="hover:underline">記事一覧</a>
+                    {/*
                     <a href="/ranking" className="hover:underline">ランキング</a>
+                    */}
                     <a href="/tags" className="hover:underline">タグ一覧</a>
                 </nav>
             </header>

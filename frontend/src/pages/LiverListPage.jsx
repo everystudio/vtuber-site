@@ -28,7 +28,7 @@ const LiverList = () => {
                 {livers.map((l, index) => (
                     <Link to={`/liver/${l.id}`} key={index} className="bg-white rounded shadow p-4 hover:bg-gray-50">
                         <img
-                            src={l.thumbnail_url ? `/images/${l.thumbnail_url}` : "/images/default.png"}
+                            src={l.thumbnail_url ? `${l.thumbnail_url}` : "/images/default.png"}
                             alt={l.name}
                             className="w-24 h-24 mx-auto rounded-full mb-4 object-cover"
                         />

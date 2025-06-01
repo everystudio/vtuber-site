@@ -12,6 +12,7 @@ export default function AdminFrame({ children }) {
                     <Link to="/admin/articles" className="hover:underline">📰 記事管理</Link>
                     <Link to="/admin/livers" className="hover:underline">🎤 ライバー管理</Link>
                     <Link to="/admin/livers/new" className="hover:underline">➕ 新規ライバー登録</Link>
+                    <Link to="/" className="hover:underline text-blue-300">🌐 通常サイトへ戻る</Link>
                 </nav>
             </header>
 

@@ -27,7 +27,7 @@ export default function LiverDetailPage() {
             <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
                 <div className="flex flex-col items-center">
                     <img
-                        src={liver.thumbnail_url ? `/images/${liver.thumbnail_url}` : "/images/default.png"}
+                        src={liver.thumbnail_url ? `${liver.thumbnail_url}` : "/images/default.png"}
                         alt={liver.name}
                         className="w-32 h-32 rounded-full mb-4 object-cover"
                     />

@@ -57,9 +57,9 @@ export default function TopPage() {
                 </div>
             </section>
 
-            {/* 人気ランキング */}
+            {/* 人気ランキング
             <section>
-                <h2 className="text-xl font-bold mb-4 border-b pb-2">🔥 人気Liverランキング（今週）</h2> {/* VtuberをLiverに変更 */}
+                <h2 className="text-xl font-bold mb-4 border-b pb-2">🔥 人気Liverランキング（今週）</h2>
                 <ol className="space-y-2">
                     {ranking.map((liver, idx) => (
                         <li key={idx} className="flex justify-between border-b py-1">
@@ -69,20 +69,26 @@ export default function TopPage() {
                     ))}
                 </ol>
             </section>
+             */}
 
             {/* 話題のLiver */}
             <section>
                 <h2 className="text-xl font-bold mb-4 border-b pb-2">👀 話題のLiver</h2> {/* VtuberをLiverに変更 */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     {hotLivers.map((liver, idx) => (
-                        <div key={idx} className="text-center">
-                            <img
-                                src={liver.thumbnail_url ? `/images/${liver.thumbnail_url}` : "/images/default.png"}
-                                alt={liver.name}
-                                className="rounded-full w-24 h-24 mx-auto mb-2"
-                            />
-                            <p className="text-sm font-medium">{liver.name}</p>
-                        </div>
+                        <Link
+                            to={`/liver/${liver.id}`}
+                            key={idx}
+                            className="bg-white shadow rounded p-4 hover:bg-gray-50">
+                            <div key={idx} className="text-center">
+                                <img
+                                    src={liver.thumbnail_url ? `${liver.thumbnail_url}` : "/images/default.png"}
+                                    alt={liver.name}
+                                    className="rounded-full w-24 h-24 mx-auto mb-2"
+                                />
+                                <p className="text-sm font-medium">{liver.name}</p>
+                            </div>
+                        </Link>
                     ))}
                 </div>
             </section>
