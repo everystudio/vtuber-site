@@ -8,7 +8,7 @@ const LiverList = () => { // VtuberListをLiverListに変更
 
     useEffect(() => {
         console.log("APIを呼び出します");
-        axios.get("http://localhost:8000/api/vtubers.php")
+        axios.get("http://localhost:8000/api/livers.php")
             .then((res) => {
                 console.log("APIからのレスポンス:", res.data);
                 setLivers(res.data); // vtubersをliversに変更

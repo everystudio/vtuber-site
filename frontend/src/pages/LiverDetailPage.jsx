@@ -9,7 +9,7 @@ export default function LiverDetailPage() {
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/vtubers.php?id=${id}`)
+        axios.get(`http://localhost:8000/api/livers.php?id=${id}`)
             .then(res => setLiver(res.data))
             .catch(err => console.error("ライバー詳細取得失敗:", err));
     }, [id]);
