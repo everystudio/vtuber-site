@@ -1,12 +1,34 @@
 <?php
+// 共通ヘッダー
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+
+error_log("🔥 livers.php: プログラムが通過しました");
+
+// OPTIONSリクエストはここで終了
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 $host = "127.0.0.1";
 $dbname = "liver_db"; // データベース名を変更
 $user = "root";
 $pass = "";
 
-// 共通ヘッダー
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json");
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+    error_log("✅ DB接続成功");
+} catch (PDOException $e) {
+    error_log("❌ DB接続失敗: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(["error" => "DB接続失敗"]);
+    exit();
+}
+error_log("👀 METHOD: " . $_SERVER['REQUEST_METHOD']);
+
 
 // ✅ GET処理を最初に
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
@@ -54,30 +76,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 // ✅ POST処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header("Access-Control-Allow-Methods: POST");
-
+    error_log("🔥 POST処理に入りました");
     $data = json_decode(file_get_contents("php://input"), true);
 
-    $name = $data["name"] ?? "";
-    $youtube = $data["youtube_url"] ?? "";
-    $desc = $data["description"] ?? "";
+    $youtubeUrl = !empty($data['youtube_url']) ? $data['youtube_url'] : null;
+    $debutDate = !empty($data['debut_date']) ? $data['debut_date'] : null;
 
-    if (!$name) {
-        http_response_code(400);
-        echo json_encode(["error" => "名前は必須です"]);
-        exit;
-    }
+    $stmt = $pdo->prepare("INSERT INTO livers (name, group_id, description, youtube_url, thumbnail_url, debut_date)
+        VALUES (:name, :group_id, :description, :youtube_url, :thumbnail_url, :debut_date)");
 
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-        $stmt = $pdo->prepare("INSERT INTO livers (name, youtube_url, description) VALUES (?, ?, ?)");
-        $stmt->execute([$name, $youtube, $desc]);
-        echo json_encode(["success" => true, "id" => $pdo->lastInsertId()]);
-    } catch (PDOException $e) {
+    $stmt->bindParam(':name', $data['name']);
+    $stmt->bindParam(':group_id', $data['group_id']);
+    $stmt->bindParam(':description', $data['description']);
+    $stmt->bindParam(':youtube_url', $youtubeUrl);
+    $stmt->bindParam(':thumbnail_url', $data['thumbnail_url']);
+    $stmt->bindParam(':debut_date', $debutDate);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        error_log("❌ SQL実行失敗: " . print_r($stmt->errorInfo(), true));
         http_response_code(500);
-        echo json_encode(["error" => $e->getMessage()]);
+        echo json_encode(['error' => '保存に失敗しました']);
     }
-    exit;
+
+    exit();
 }
 
 // ✅ その他のリクエスト（PUTなど）は拒否

@@ -12,7 +12,7 @@ header("Access-Control-Allow-Origin: http://localhost:3000");
 
 // 保存ディレクトリ
 $uploadDir = '../uploads/';
-$filename = uniqid() . '_' . basename($_FILES['image']['name']);
+$filename = date("Y-m-d") . "_" . uniqid() . '_' . basename($_FILES['image']['name']);
 $targetFile = $uploadDir . $filename;
 
 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {

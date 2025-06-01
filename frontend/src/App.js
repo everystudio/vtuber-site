@@ -12,6 +12,7 @@ import ArticleFormPage from "./pages/ArticleFormPage";
 // 管理者用のページ
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLiverListPage from "./pages/admin/AdminLiverListPage";
+import AdminLiverFormPage from "./pages/admin/AdminLiverFormPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         {/* 管理者アクセス */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/livers" element={<AdminLiverListPage />} />
+        <Route path="/admin/livers/new" element={<AdminLiverFormPage />} />
         {/* <Route path="/admin/articles" element={<AdminArticleListPage />} /> */}
         {/* <Route path="/admin/livers" element={<AdminLiverListPage />} /> */}
 
