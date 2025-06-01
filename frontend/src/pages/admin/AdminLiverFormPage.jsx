@@ -13,15 +13,21 @@ export default function AdminLiverFormPage() {
     const [debutDate, setDebutDate] = useState("");
     const [groups, setGroups] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [platforms, setPlatforms] = useState([]); // 選択された platform_id の配列
+    const [platformOptions, setPlatformOptions] = useState([]);
 
     useEffect(() => {
-        // グループ一覧を取得
-        axios.get("http://localhost:8000/api/groups.php")
-            .then((res) => {
-                setGroups(res.data);
+        // 並列でAPIを呼び出す
+        const fetchGroups = axios.get("http://localhost:8000/api/groups.php");
+        const fetchPlatforms = axios.get("http://localhost:8000/api/platforms.php");
+
+        Promise.all([fetchGroups, fetchPlatforms])
+            .then(([groupsRes, platformsRes]) => {
+                setGroups(groupsRes.data);
+                setPlatformOptions(platformsRes.data);
             })
             .catch((err) => {
-                console.error("グループ一覧取得失敗:", err);
+                console.error("初期データ取得に失敗:", err);
             });
     }, []);
 
@@ -35,6 +41,7 @@ export default function AdminLiverFormPage() {
             youtube_url: youtubeUrl,
             thumbnail_url: thumbnailUrl,
             debut_date: debutDate,
+            platform_ids: platforms,
         };
 
         axios.post("http://localhost:8000/api/livers.php", payload)
@@ -74,6 +81,14 @@ export default function AdminLiverFormPage() {
         }
     };
 
+    const togglePlatform = (id) => {
+        setPlatforms((prev) =>
+            prev.includes(id)
+                ? prev.filter((p) => p !== id)
+                : [...prev, id]
+        );
+    };
+
     return (
         <SiteFrame>
             <div className="max-w-xl mx-auto p-6">
@@ -104,6 +119,21 @@ export default function AdminLiverFormPage() {
                     <div>
                         <label className="block font-semibold mb-1">説明</label>
                         <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full border px-3 py-2 rounded" />
+                    </div>
+
+                    <div>
+                        <label className="block font-semibold mb-1">プラットフォーム</label>
+                        {platformOptions.map((platform) => (
+                            <label key={platform.id} className="block">
+                                <input
+                                    type="checkbox"
+                                    value={platform.id}
+                                    checked={platforms.includes(platform.id)}
+                                    onChange={() => togglePlatform(platform.id)}
+                                />
+                                <span className="ml-2">{platform.name}</span>
+                            </label>
+                        ))}
                     </div>
 
                     <div>

@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':thumbnail_url', $data['thumbnail_url']);
     $stmt->bindParam(':debut_date', $debutDate);
 
+
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);
     } else {
@@ -100,6 +101,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['error' => '保存に失敗しました']);
     }
 
+    $liverId = $pdo->lastInsertId();
+
+    // ② platforms との中間テーブルへ登録
+    if (!empty($data['platform_ids']) && is_array($data['platform_ids'])) {
+        $stmt = $pdo->prepare("INSERT INTO liver_platform (liver_id, platform_id) VALUES (:liver_id, :platform_id)");
+        foreach ($data['platform_ids'] as $platformId) {
+            $result = $stmt->execute([
+                ':liver_id' => $liverId,
+                ':platform_id' => $platformId
+            ]);
+
+            if (!$result) {
+                error_log("❌ liver_platformへのINSERT失敗: liver_id={$liverId}, platform_id={$platformId}");
+                error_log("詳細: " . print_r($stmt->errorInfo(), true));
+            }
+        }
+    }
+
+    echo json_encode(['success' => true]);
     exit();
 }
 

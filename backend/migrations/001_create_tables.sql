@@ -30,24 +30,29 @@ INSERT IGNORE INTO platforms (id, name) VALUES
 (10, '17Live'),
 (11, 'IRIAM');
 
-
 CREATE TABLE IF NOT EXISTS livers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     youtube_url VARCHAR(255),
     description TEXT,
     thumbnail_url VARCHAR(255),
-    platform_id INT DEFAULT NULL,
     group_id INT DEFAULT NULL,
     debut_date DATE DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE SET NULL
 );
 
 INSERT INTO vtubers (name, youtube_url, description, thumbnail_url)
 VALUES
 ('カモ田ぴよ', 'https://www.youtube.com/channel/xxx', '毎日12時から底辺雑談', 'kamotapiyo_thumb.png'),
 ('底辺めがね', 'https://www.youtube.com/channel/yyy', 'マイクがノイズだらけ！でも熱意は本物！', 'teihen_megane_thumb.png');
+
+CREATE TABLE liver_platform (
+    liver_id INT NOT NULL,
+    platform_id INT NOT NULL,
+    PRIMARY KEY (liver_id, platform_id),
+    FOREIGN KEY (liver_id) REFERENCES livers(id) ON DELETE CASCADE,
+    FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
+);
 
 
 CREATE TABLE IF NOT EXISTS tags (
