@@ -9,7 +9,6 @@ import LiverListPage from "./pages/LiverListPage"; // VtuberListPageをLiverList
 import LiverDetailPage from "./pages/LiverDetailPage"; // VtuberDetailPageをLiverDetailPageに変更
 import ArticleListPage from "./pages/ArticleListPage";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
-import ArticleFormPage from "./pages/ArticleFormPage";
 
 // 管理者用のページ
 import AdminLogin from './pages/admin/AdminLogin';
@@ -17,6 +16,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLiverListPage from "./pages/admin/AdminLiverListPage";
 import AdminLiverFormPage from "./pages/admin/AdminLiverFormPage";
 import AdminLiverEditPage from "./pages/admin/AdminLiverEditPage";
+import AdminArticleListPage from "./pages/admin/AdminArticleListPage";
+import AdminArticleFormPage from "./pages/admin/AdminArticleFormPage";
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
@@ -35,8 +36,6 @@ function App() {
           <Route path="/liver/:id" element={<LiverDetailPage />} /> {/* VtuberDetailPageをLiverDetailPageに変更 */}
           <Route path="/articles/:page" element={<ArticleListPage />} />
           <Route path="/article/:id" element={<ArticleDetailPage />} />
-          <Route path="/article/new" element={<ArticleFormPage />} />
-          <Route path="/article/edit/:id" element={<ArticleFormPage />} />
 
           {/* 管理者ログイン */}
           <Route path="/admin/login" element={<AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
@@ -46,6 +45,9 @@ function App() {
           <Route path="/admin/livers" element={isAuthenticated ? <AdminLiverListPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/livers/new" element={isAuthenticated ? <AdminLiverFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/livers/:id/edit" element={isAuthenticated ? <AdminLiverEditPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/articles" element={isAuthenticated ? <AdminArticleListPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/article/new" element={isAuthenticated ? <AdminArticleFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/article/edit/:id" element={isAuthenticated ? <AdminArticleFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
 
           {/* <Route path="/admin/articles" element={<AdminArticleListPage />} /> */}
           {/* <Route path="/admin/livers" element={<AdminLiverListPage />} /> */}

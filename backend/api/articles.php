@@ -60,7 +60,8 @@ try {
             // 単体の記事をerror_logに出力
             error_log(print_r($article, true));
 
-            echo json_encode(['article' => $article]);        } else if ($liver_id > 0) {
+            echo json_encode(['article' => $article]); 
+        } else if ($liver_id > 0) {
             // liver_idで絞り込んだ記事一覧を取得
             $stmt = $pdo->prepare('SELECT * FROM articles WHERE liver_id = :liver_id');
             $stmt->bindParam(':liver_id', $liver_id, PDO::PARAM_INT);
@@ -79,11 +80,20 @@ try {
             $countStmt = $pdo->query("SELECT COUNT(*) FROM articles");
             $total = $countStmt->fetchColumn();
 
-            // 対象ページの記事を取得
-            $stmt = $pdo->prepare("SELECT id, title, created_at as date, tags FROM articles ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+            // 記事＋liver_nameを取得（JOIN付き）
+            $stmt = $pdo->prepare("
+                SELECT 
+                    a.id, a.title, a.created_at AS date, a.tags, l.name AS liver_name 
+                FROM articles a
+                LEFT JOIN livers l ON a.liver_id = l.id
+                ORDER BY a.created_at DESC
+                LIMIT :limit OFFSET :offset
+            ");
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-            $stmt->execute();            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->execute();
+            
+            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($articles as &$article) {
                 processTags($article);
@@ -93,6 +103,9 @@ try {
             echo json_encode([
                 'total' => $total,
                 'articles' => $articles,
+                'page' => $page,
+                'limit' => $limit,
+                'pages' => ceil($total / $limit)
             ]);
         } else if ($liver_id === 0) {
             // 全件取得

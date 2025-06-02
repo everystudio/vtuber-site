@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
-import SiteFrame from "../components/SiteFrame";
-import RichTextEditor from "../components/RichTextEditor";
+import AdminFrame from "../../components/AdminFrame";
+import RichTextEditor from "../../components/RichTextEditor";
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -10,8 +10,14 @@ import StarterKit from "@tiptap/starter-kit";
 export default function ArticleFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
+
+    // クエリパラメータを取得
+    const searchParams = new URLSearchParams(location.search);
+    const page = searchParams.get("page") || 1;
+
 
     const editor = useEditor({
         extensions: [StarterKit],
@@ -64,7 +70,7 @@ export default function ArticleFormPage() {
     };
 
     return (
-        <SiteFrame>
+        <AdminFrame>
             <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
                 <h1 className="text-2xl font-bold mb-4">{id ? "記事を編集" : "新しい記事を投稿"}</h1>
                 <div className="mb-4">
@@ -89,14 +95,25 @@ export default function ArticleFormPage() {
                         dangerouslySetInnerHTML={{ __html: body }}
                     />
                 </div>
-                <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                    onClick={handleSubmit}
-                    disabled={!editor} // エディタ初期化前は非活性
-                >
-                    {id ? "更新" : "投稿"}
-                </button>
+
+                <div className="flex gap-2">
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        onClick={handleSubmit}
+                        disabled={!editor} // エディタ初期化前は非活性
+                    >
+                        {id ? "更新" : "投稿"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => navigate(`/admin/articles?page=${page}`)}
+                        className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                    >
+                        キャンセル
+                    </button>
+                </div>
             </div>
-        </SiteFrame>
+        </AdminFrame>
     );
 }
