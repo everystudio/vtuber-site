@@ -1,0 +1,12 @@
+{
+    "name": "watan/backend",
+    "autoload": {
+        "psr-4": {
+            "Watan\\Backend\\": "src/"
+        }
+    },
+    "require": {
+        "google/apiclient": "^2.18",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

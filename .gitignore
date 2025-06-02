@@ -1,12 +1,19 @@
-# React build
+# ✅ React 関連
 /frontend/node_modules/
 /frontend/build/
+/frontend/.cache/
+/frontend/.env
 
-# PHP IDE系
+# ✅ PHP IDE & 一時ファイル
 *.log
 .vscode/
 .idea/
+.DS_Store
 
-# backend
+# ✅ backend
+/backend/vendor/
+/backend/.env
+
+# ✅ アップロードファイルを無視（.gitkeep は許可）
 /backend/uploads/*
 !/backend/uploads/.gitkeep

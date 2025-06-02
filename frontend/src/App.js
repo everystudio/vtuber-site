@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // ユーザー用のページ
@@ -10,33 +12,46 @@ import ArticleDetailPage from "./pages/ArticleDetailPage";
 import ArticleFormPage from "./pages/ArticleFormPage";
 
 // 管理者用のページ
+import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLiverListPage from "./pages/admin/AdminLiverListPage";
 import AdminLiverFormPage from "./pages/admin/AdminLiverFormPage";
 import AdminLiverEditPage from "./pages/admin/AdminLiverEditPage";
 
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("isAdminAuthenticated") === "true";
+  });
+
   return (
     <div className="App">
-      <Routes>
-        {/* ユーザーアクセス */}
-        <Route path="/" element={<TopPage />} />
-        <Route path="/livers" element={<LiverListPage />} /> {/* VtuberListPageをLiverListPageに変更 */}
-        <Route path="/liver/:id" element={<LiverDetailPage />} /> {/* VtuberDetailPageをLiverDetailPageに変更 */}
-        <Route path="/articles/:page" element={<ArticleListPage />} />
-        <Route path="/article/:id" element={<ArticleDetailPage />} />
-        <Route path="/article/new" element={<ArticleFormPage />} />
-        <Route path="/article/edit/:id" element={<ArticleFormPage />} />
+      <GoogleOAuthProvider clientId={clientId}>
+        <Routes>
+          {/* ユーザーアクセス */}
+          <Route path="/" element={<TopPage />} />
+          <Route path="/livers" element={<LiverListPage />} /> {/* VtuberListPageをLiverListPageに変更 */}
+          <Route path="/liver/:id" element={<LiverDetailPage />} /> {/* VtuberDetailPageをLiverDetailPageに変更 */}
+          <Route path="/articles/:page" element={<ArticleListPage />} />
+          <Route path="/article/:id" element={<ArticleDetailPage />} />
+          <Route path="/article/new" element={<ArticleFormPage />} />
+          <Route path="/article/edit/:id" element={<ArticleFormPage />} />
 
-        {/* 管理者アクセス */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/livers" element={<AdminLiverListPage />} />
-        <Route path="/admin/livers/new" element={<AdminLiverFormPage />} />
-        <Route path="/admin/livers/:id/edit" element={<AdminLiverEditPage />} />
-        {/* <Route path="/admin/articles" element={<AdminArticleListPage />} /> */}
-        {/* <Route path="/admin/livers" element={<AdminLiverListPage />} /> */}
+          {/* 管理者ログイン */}
+          <Route path="/admin/login" element={<AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
 
-      </Routes>
+          {/* 管理者ページ：認証必須 */}
+          <Route path="/admin" element={isAuthenticated ? <AdminDashboard setIsAuthenticated={setIsAuthenticated} /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/livers" element={isAuthenticated ? <AdminLiverListPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/livers/new" element={isAuthenticated ? <AdminLiverFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/livers/:id/edit" element={isAuthenticated ? <AdminLiverEditPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+
+          {/* <Route path="/admin/articles" element={<AdminArticleListPage />} /> */}
+          {/* <Route path="/admin/livers" element={<AdminLiverListPage />} /> */}
+
+        </Routes>
+      </GoogleOAuthProvider>
 
       {/* 必要なら個別のコンポーネントも表示 */}
       {/* <VtuberList /> ← TopPage内に移す or 条件付きで表示でもOK */}
