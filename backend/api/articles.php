@@ -20,16 +20,10 @@ function processTags(&$article) {
     }
 }
 
-// DB接続共通処理
-$host = "127.0.0.1";
-$dbname = "liver_db"; // データベース名を変更
-$user = "root";
-$pass = "";
+require_once __DIR__ . '/../includes/db.php';
+$pdo = getPDO();
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-    error_log("✅ DB接続成功");
-
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {

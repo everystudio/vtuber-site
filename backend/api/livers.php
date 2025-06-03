@@ -13,20 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$host = "127.0.0.1";
-$dbname = "liver_db"; // データベース名を変更
-$user = "root";
-$pass = "";
+require_once __DIR__ . '/../includes/db.php';
+$pdo = getPDO();
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-    error_log("✅ DB接続成功");
-} catch (PDOException $e) {
-    error_log("❌ DB接続失敗: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(["error" => "DB接続失敗"]);
-    exit();
-}
 error_log("👀 METHOD: " . $_SERVER['REQUEST_METHOD']);
 
 
@@ -34,7 +23,6 @@ error_log("👀 METHOD: " . $_SERVER['REQUEST_METHOD']);
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
         $stmt = $pdo->prepare("SELECT * FROM livers WHERE id = ?");
         $stmt->execute([$id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -62,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     error_log("🔥 GET処理に入りました");
     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
         error_log("✅ DB接続成功");
 
         $stmt = $pdo->query("SELECT * FROM livers ORDER BY created_at DESC");

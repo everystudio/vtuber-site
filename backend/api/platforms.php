@@ -1,20 +1,15 @@
 <?php
-$host = "127.0.0.1";
-$dbname = "liver_db"; // データベース名を変更
-$user = "root";
-$pass = "";
 
 // 共通ヘッダー
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
+require_once __DIR__ . '/../includes/db.php';
+$pdo = getPDO();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     error_log("🔥 GET処理に入りました");
     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-        error_log("✅ DB接続成功");
-
         $stmt = $pdo->query("SELECT * FROM platforms ORDER BY id ASC");
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
