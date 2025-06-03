@@ -7,7 +7,7 @@ export default function AdminArticleListPage() {
     const [articles, setArticles] = useState([]);
     const [total, setTotal] = useState(0);
     const [pages, setPages] = useState(1);
-    const limit = 2; // ← 1ページに表示する件数
+    const limit = 10; // ← 1ページに表示する件数
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
