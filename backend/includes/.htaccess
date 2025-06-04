@@ -1,0 +1,5 @@
+# includes/.htaccess
+<FilesMatch "\.(php|inc)$">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>

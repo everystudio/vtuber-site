@@ -12,7 +12,7 @@
 
 # ✅ backend
 /backend/vendor/
-/backend/.env
+/backend/includes/.env*
 
 # ✅ アップロードファイルを無視（.gitkeep は許可）
 /backend/uploads/*
