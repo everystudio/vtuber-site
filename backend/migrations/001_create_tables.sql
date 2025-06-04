@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS platforms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     slug VARCHAR(100) NOT NULL UNIQUE,
+    is_active BOOLEAN DEFAULT FALSE,
 );
 
 -- プラットフォームの初期データ挿入

@@ -1,13 +1,25 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/env.php';
+loadEnv();
 
 header("Content-Type: application/xml; charset=utf-8");
 
-$host = "https://yourdomain.com"; // 本番ドメインに置き換え
+$host = getenv("SITE_DOMAIN"); // 本番ドメインに置き換え
 $pdo = getPDO();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+
+// プラットフォームごとのトップページのリンクも作成する
+$stmt = $pdo->query("SELECT slug FROM platforms where is_active = 1");
+foreach ($stmt as $row) {
+    $slug = htmlspecialchars($row['slug']);
+    echo "<url>";
+    echo "<loc>$host/$slug</loc>";
+    echo "<changefreq>weekly</changefreq>";
+    echo "</url>\n";
+}
 
 // 配信者一覧
 $stmt = $pdo->query("SELECT id, updated_at FROM livers");
