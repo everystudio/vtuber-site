@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // ユーザー用のページ
 import TopPage from './pages/TopPage';
+
 import LiverListPage from "./pages/LiverListPage"; // VtuberListPageをLiverListPageに変更
 import LiverDetailPage from "./pages/LiverDetailPage"; // VtuberDetailPageをLiverDetailPageに変更
 import ArticleListPage from "./pages/ArticleListPage";
@@ -31,7 +32,8 @@ function App() {
       <GoogleOAuthProvider clientId={clientId}>
         <Routes>
           {/* ユーザーアクセス */}
-          <Route path="/" element={<TopPage />} />
+          <Route path="/:platform?" element={<TopPage />} />
+
           <Route path="/livers" element={<LiverListPage />} /> {/* VtuberListPageをLiverListPageに変更 */}
           <Route path="/liver/:id" element={<LiverDetailPage />} /> {/* VtuberDetailPageをLiverDetailPageに変更 */}
           <Route path="/articles/:page" element={<ArticleListPage />} />

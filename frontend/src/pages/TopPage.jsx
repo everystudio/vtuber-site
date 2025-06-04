@@ -1,31 +1,43 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import SiteFrame from "../components/SiteFrame"; // サイト全体のレイアウトを定義したコンポーネント
-import { Link } from "react-router-dom"; // リンクを追加
+import SiteFrame from "../components/SiteFrame";
+import { Link, useParams } from "react-router-dom";
 
-export default function TopPage() {
+export default function PlatformTopPage() {
+    const { platform } = useParams(); // URLからプラットフォーム名を取得
+    const storedPlatform = localStorage.getItem("selectedPlatform");
+    const effectivePlatform = platform || storedPlatform;
+
     const [articles, setArticles] = useState([]);
     const [ranking, setRanking] = useState([]);
-    const [hotLivers, setHotLivers] = useState([]); // hotVtubersをhotLiversに変更
-    const [error, setError] = useState(null); // エラー状態を追加
+    const [hotLivers, setHotLivers] = useState([]);
+    const [error, setError] = useState(null);
+
+    const url = effectivePlatform
+        ? `http://localhost:8000/api/top.php?platform=${effectivePlatform}`
+        : `http://localhost:8000/api/top.php`;
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/top.php")
+        if (platform) {
+            localStorage.setItem("selectedPlatform", platform);
+        }
+        axios.get(url)
             .then((res) => {
-                const { articles, ranking, hot_livers } = res.data; // hot_vtubersをhot_liversに変更
-                console.log("APIから取得したデータ:", res.data); // デバッグ用ログ
+                const { articles, ranking, hot_livers } = res.data;
+                console.log("APIから取得したデータ:", res.data);
                 setArticles(articles);
                 setRanking(ranking);
-                setHotLivers(hot_livers); // hotVtubersをhotLiversに変更
+                setHotLivers(hot_livers);
             })
             .catch((err) => {
-                console.error("トップページデータの取得に失敗しました:", err);
-                setError("データの取得に失敗しました。後でもう一度お試しください。"); // エラーメッセージを設定
+                console.error("プラットフォーム別トップページ取得失敗:", err);
+                setError("データの取得に失敗しました。後でもう一度お試しください。");
             });
-    }, []);
+    }, [platform]);
 
     return (
         <SiteFrame>
+
             {error && (
                 <div className="bg-red-100 text-red-700 p-4 rounded mb-4">
                     {error}
@@ -49,40 +61,25 @@ export default function TopPage() {
                         </Link>
                     ))}
                 </div>
-                {/* 記事一覧ページへのリンク */}
                 <div className="mt-4 text-right">
-                    <Link to="/articles/1" className="text-blue-600 hover:underline text-sm">
+                    <Link to={`/articles/1?platform=${platform}`} className="text-blue-600 hover:underline text-sm">
                         もっと見る →
                     </Link>
                 </div>
             </section>
 
-            {/* 人気ランキング
-            <section>
-                <h2 className="text-xl font-bold mb-4 border-b pb-2">🔥 人気Liverランキング（今週）</h2>
-                <ol className="space-y-2">
-                    {ranking.map((liver, idx) => (
-                        <li key={idx} className="flex justify-between border-b py-1">
-                            <span>{idx + 1}. {liver.name}</span>
-                            <span className="text-sm text-gray-500">{liver.growth}</span>
-                        </li>
-                    ))}
-                </ol>
-            </section>
-             */}
-
             {/* 話題のLiver */}
             <section>
-                <h2 className="text-xl font-bold mb-4 border-b pb-2">👀 話題のLiver</h2> {/* VtuberをLiverに変更 */}
+                <h2 className="text-xl font-bold mb-4 border-b pb-2">👀 話題のLiver</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     {hotLivers.map((liver, idx) => (
                         <Link
                             to={`/liver/${liver.id}`}
                             key={idx}
                             className="bg-white shadow rounded p-4 hover:bg-gray-50">
-                            <div key={idx} className="text-center">
+                            <div className="text-center">
                                 <img
-                                    src={liver.thumbnail_url ? `${liver.thumbnail_url}` : "/images/default.png"}
+                                    src={liver.thumbnail_url || "/images/default.png"}
                                     alt={liver.name}
                                     className="rounded-full w-24 h-24 mx-auto mb-2"
                                 />

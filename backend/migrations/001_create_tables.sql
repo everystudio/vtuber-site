@@ -13,22 +13,25 @@ INSERT IGNORE INTO groups (id, name) VALUES
 -- プラットフォームテーブル追加
 CREATE TABLE IF NOT EXISTS platforms (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL UNIQUE,
+    slug VARCHAR(100) NOT NULL UNIQUE,
 );
 
 -- プラットフォームの初期データ挿入
 INSERT IGNORE INTO platforms (id, name) VALUES
-(1, 'YouTube'),
-(2, 'Twitch'),
-(3, 'Bilibili'),
-(4, 'Niconico'),
-(5, 'Twitter'),
-(6, 'Instagram'),
-(7, 'Facebook'),
-(8, 'TikTok'),
-(9, 'Mirrative'),
-(10, '17Live'),
-(11, 'IRIAM');
+(1, 'YouTube', 'youtube'),
+(2, 'Twitch', 'twitch'),
+(3, 'Bilibili', 'bilibili'),
+(4, 'Niconico', 'niconico'),
+(5, 'Twitter', 'twitter'),
+(6, 'Instagram', 'instagram'),
+(7, 'Facebook', 'facebook'),
+(8, 'TikTok', 'tiktok'),
+(9, 'Mirrativ', 'mirrativ'),
+(10, '17Live', '17live'),
+(11, 'IRIAM', 'iriam'),
+(12, 'OPENREC', 'openrec'),
+
 
 CREATE TABLE IF NOT EXISTS livers (
     id INT AUTO_INCREMENT PRIMARY KEY,

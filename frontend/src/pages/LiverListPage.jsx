@@ -5,10 +5,16 @@ import SiteFrame from "../components/SiteFrame";
 
 const LiverList = () => {
     const [livers, setLivers] = useState([]);
+    const storedPlatform = localStorage.getItem("selectedPlatform");
 
     useEffect(() => {
         console.log("APIを呼び出します");
-        axios.get("http://localhost:8000/api/livers.php")
+
+        const url = storedPlatform
+            ? `http://localhost:8000/api/livers.php?platform=${storedPlatform}`
+            : `http://localhost:8000/api/livers.php`;
+
+        axios.get(url)
             .then((res) => {
                 console.log("APIからのレスポンス:", res.data);
                 setLivers(res.data);

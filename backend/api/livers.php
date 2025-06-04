@@ -50,10 +50,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     error_log("🔥 GET処理に入りました");
     try {
-        error_log("✅ DB接続成功");
 
-        $stmt = $pdo->query("SELECT * FROM livers ORDER BY created_at DESC");
+        $platform = $_GET['platform'] ?? null;
+        if ($platform) {
+            // Platform名をIDに変換
+            $stmtPlatformId = $pdo->prepare("SELECT id FROM platforms WHERE slug = :slug");
+            $stmtPlatformId->bindParam(':slug', $platform, PDO::PARAM_STR);
+            $stmtPlatformId->execute();
+            $platformRow = $stmtPlatformId->fetch(PDO::FETCH_ASSOC);
+            if (!$platformRow) {
+                echo json_encode(["error" => "Platform not found"], JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $platformId = $platformRow['id'];
+            error_log("🔥 GET処理: platformId = " . $platformId);
+            // platform_id 絞り込みでLiverを取得
+            $stmt = $pdo->prepare("
+                SELECT l.*
+                FROM livers l
+                JOIN liver_platform lp ON l.id = lp.liver_id
+                WHERE lp.platform_id = :platform_id
+                ORDER BY l.created_at DESC
+            ");
+            $stmt->bindParam(':platform_id', $platformId);
+            $stmt->execute(); // ← これが必要！
+        }
+        else{
+            $stmt = $pdo->query("SELECT * FROM livers ORDER BY created_at DESC");
+        }
+
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        error_log("🔥 GET処理: 取得したライバー数 = " . count($data));
 
         // 各ライバーのplatformsを取得
         foreach ($data as &$liver) {
