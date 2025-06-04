@@ -6,7 +6,7 @@ export default function Layout({ children }) {
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow p-4 flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-pink-600">配信者まとめ</h1>
+                <h1 className="text-2xl font-bold text-pink-600">あの配信者まとめ</h1>
                 <nav className="space-x-4 text-gray-700">
                     <a href="/" className="hover:underline">ホーム</a>
                     <Link to="/livers" className="hover:underline">Liver一覧</Link>

@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS livers (
     group_id INT DEFAULT NULL,
     debut_date DATE DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 );
 
 INSERT INTO vtubers (name, youtube_url, description, thumbnail_url)
