@@ -1,0 +1,24 @@
+name: 🚀 FTPテストアップロード（手動）
+
+on:
+  workflow_dispatch:  # ✅ これで「手動トリガー」対応
+
+jobs:
+  ftp-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 仮のファイルを作成
+        run: echo "これはテスト用のファイルです" > test-upload.txt
+
+      - name: FTPでアップロード
+        uses: SamKirkland/FTP-Deploy-Action@4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: .
+          server-dir: /public_html/test-deploy/
+          exclude: |
+            **/.git*
+            **/.github*
