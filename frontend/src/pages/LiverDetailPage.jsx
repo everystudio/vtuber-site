@@ -4,18 +4,19 @@ import axios from "axios";
 import SiteFrame from "../components/SiteFrame";
 
 export default function LiverDetailPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const { id } = useParams();
     const [liver, setLiver] = useState(null);
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/livers.php?id=${id}`)
+        axios.get(`${baseUrl}/api/livers.php?id=${id}`)
             .then(res => setLiver(res.data))
             .catch(err => console.error("ライバー詳細取得失敗:", err));
     }, [id]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/articles.php?liver_id=${id}`)
+        axios.get(`${baseUrl}/api/articles.php?liver_id=${id}`)
             .then(res => setArticles(res.data.articles || []))
             .catch(err => console.error("記事取得失敗:", err));
     }, [id]);

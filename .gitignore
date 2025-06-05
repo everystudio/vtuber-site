@@ -2,7 +2,7 @@
 /frontend/node_modules/
 /frontend/build/
 /frontend/.cache/
-/frontend/.env
+/frontend/.env*
 
 # ✅ PHP IDE & 一時ファイル
 *.log
@@ -12,7 +12,7 @@
 
 # ✅ backend
 /backend/vendor/
-/backend/.env
+/backend/includes/.env*
 
 # ✅ アップロードファイルを無視（.gitkeep は許可）
 /backend/uploads/*

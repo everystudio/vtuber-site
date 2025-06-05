@@ -4,6 +4,7 @@ import SiteFrame from "../components/SiteFrame";
 import { Link, useParams } from "react-router-dom";
 
 export default function PlatformTopPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const { platform } = useParams(); // URLからプラットフォーム名を取得
     const storedPlatform = localStorage.getItem("selectedPlatform");
     const effectivePlatform = platform || storedPlatform;
@@ -14,8 +15,8 @@ export default function PlatformTopPage() {
     const [error, setError] = useState(null);
 
     const url = effectivePlatform
-        ? `http://localhost:8000/api/top.php?platform=${effectivePlatform}`
-        : `http://localhost:8000/api/top.php`;
+        ? `${baseUrl}/api/top.php?platform=${effectivePlatform}`
+        : `${baseUrl}/api/top.php`;
 
     useEffect(() => {
         if (platform) {

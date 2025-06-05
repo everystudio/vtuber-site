@@ -4,6 +4,7 @@ import axios from "axios";
 import SiteFrame from "../components/SiteFrame";
 
 export default function ArticleDetailPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const { id } = useParams();
     const navigate = useNavigate(); // ← ナビゲーション用フック
     const [article, setArticle] = useState(null);
@@ -11,14 +12,14 @@ export default function ArticleDetailPage() {
     const [newComment, setNewComment] = useState("");
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/articles.php?id=${id}`)
+        axios.get(`${baseUrl}/api/articles.php?id=${id}`)
             .then(res => {
                 setArticle(res.data.article);
                 console.log("記事データ:", res.data); // デバッグ用ログ
             })
             .catch(err => console.error("記事取得失敗:", err));
 
-        axios.get(`http://localhost:8000/api/comments.php?article_id=${id}`)
+        axios.get(`${baseUrl}/api/comments.php?article_id=${id}`)
             .then(res => setComments(res.data.comments || []))
             .catch(err => console.error("コメント取得失敗:", err));
     }, [id]);
@@ -26,7 +27,7 @@ export default function ArticleDetailPage() {
     const handleCommentSubmit = () => {
         if (!newComment.trim()) return;
 
-        axios.post(`http://localhost:8000/api/comments.php`, {
+        axios.post(`${baseUrl}/api/comments.php`, {
             article_id: id,
             content: newComment
         })

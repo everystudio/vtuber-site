@@ -4,11 +4,12 @@ import axios from "axios";
 import AdminFrame from "../../components/AdminFrame";
 
 export default function AdminLiverListPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const [livers, setLivers] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/livers.php")
+        axios.get(`${baseUrl}/api/livers.php`)
             .then((res) => {
                 setLivers(res.data);
             })

@@ -4,6 +4,7 @@ import axios from "axios";
 import AdminFrame from "../../components/AdminFrame";
 
 export default function AdminLiverEditPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -23,8 +24,8 @@ export default function AdminLiverEditPage() {
         const fetchOptions = async () => {
             try {
                 const [groupRes, platformRes] = await Promise.all([
-                    axios.get("http://localhost:8000/api/groups.php"),
-                    axios.get("http://localhost:8000/api/platforms.php"),
+                    axios.get(`${baseUrl}/api/groups.php`),
+                    axios.get(`${baseUrl}/api/platforms.php`),
                 ]);
                 setGroups(groupRes.data);
                 setPlatformOptions(platformRes.data);
@@ -36,7 +37,7 @@ export default function AdminLiverEditPage() {
         // ライバーの詳細取得
         const fetchLiver = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/api/livers.php?id=${id}`);
+                const res = await axios.get(`${baseUrl}/api/livers.php?id=${id}`);
                 const data = res.data;
                 setName(data.name);
                 setGroupId(data.group_id ?? "");
@@ -78,7 +79,7 @@ export default function AdminLiverEditPage() {
             platform_ids: platforms,
         };
 
-        axios.put(`http://localhost:8000/api/livers.php`, payload)
+        axios.put(`${baseUrl}/api/livers.php`, payload)
             .then(() => {
                 alert("更新しました");
                 navigate("/admin/livers");
@@ -99,7 +100,7 @@ export default function AdminLiverEditPage() {
         setUploading(true);
 
         try {
-            const res = await axios.post("http://localhost:8000/api/upload-image.php", formData, {
+            const res = await axios.post(`${baseUrl}/api/upload-image.php`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }

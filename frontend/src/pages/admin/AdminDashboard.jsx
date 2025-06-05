@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 import AdminFrame from "../../components/AdminFrame"; // 管理画面でも共通で使う場合
 
 export default function AdminDashboard({ setIsAuthenticated }) {
-
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const navigate = useNavigate();
     const handleLogout = async () => {
         try {
             console.log('ログアウト処理実行中');
-            await axios.post('http://localhost:8000/api/logout.php', {}, {
+            await axios.post(`${baseUrl}/api/logout.php`, {}, {
                 withCredentials: true
             });
             localStorage.removeItem("isAdminAuthenticated");
