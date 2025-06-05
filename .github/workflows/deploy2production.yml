@@ -17,13 +17,14 @@ jobs:
           CI=false npm ci
           CI=false npm run build
 
-      - name: デプロイ（FTPアップロード）
+      # === React ==========
+      - name: デプロイ1（FTPアップロード）
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./  # ← プロジェクトルート
+          local-dir: ./frontend/build/  # ← プロジェクトルート
           server-dir: anoliver.com/public_html/test-deploy/
           exclude: |
             **/.git*
@@ -31,4 +32,42 @@ jobs:
             **/node_modules/**
             **/frontend/**
             !frontend/build/**
+
+      # === backend/api ==========
+      - name: デプロイ2（FTPアップロード）
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./backend/api/  # ← プロジェクトルート
+          server-dir: anoliver.com/public_html/test-deploy/api/
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            **/frontend/**
+            !frontend/build/**
+
+      # === backend/includes ==========
+      - name: デプロイ3（FTPアップロード）
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./backend/includes/  # ← プロジェクトルート
+          server-dir: anoliver.com/public_html/test-deploy/includes/
+          exclude: |
+            .env*
+            .git*
+            **/.github*
+            **/node_modules/**
+            **/frontend/**
+            !frontend/build/**
+
+
+
+
+            
             backend/includes/.env*
