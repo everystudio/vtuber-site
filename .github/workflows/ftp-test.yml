@@ -12,7 +12,7 @@ jobs:
         run: echo "これはテスト用のファイルです" > test-upload.txt
 
       - name: FTPでアップロード
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
