@@ -29,7 +29,7 @@ const LiverList = () => {
     return (
         <SiteFrame>
 
-            <h2 className="text-2xl font-bold mb-6">Liver一覧aaa</h2>
+            <h2 className="text-2xl font-bold mb-6">Liver一覧</h2>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {livers.map((l, index) => (
