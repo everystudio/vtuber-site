@@ -1,0 +1,32 @@
+name: 🚀 本番デプロイ（手動）
+
+on:
+  workflow_dispatch: # ← 手動実行だけ許可
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v3
+
+      - name: Reactビルド実行
+        working-directory: frontend
+        run: npm ci && npm run build
+
+      - name: デプロイ（FTPアップロード）
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./  # ← プロジェクトルート
+          server-dir: anoliver.com/public_html/test-deploy/
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            **/frontend/**
+            !frontend/build/**
+            backend/includes/.env*
