@@ -1,6 +1,6 @@
 // src/components/Layout.jsx
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 
 export default function Layout({ children }) {
     const { platform } = useParams();
@@ -9,7 +9,8 @@ export default function Layout({ children }) {
 
     const isPlatformMode = !!activePlatform;
     const theme = activePlatform ? platformThemes[activePlatform] : null;
-
+    const location = useLocation();
+    const isTopPage = location.pathname === "/" || location.pathname === `/${activePlatform}`;
     return (
         <div className="min-h-screen bg-gray-50">
             <header className={`shadow p-4 flex justify-between items-center ${theme?.bg || "bg-white"}`}>
@@ -32,7 +33,7 @@ export default function Layout({ children }) {
                     <a href="/tags" className="hover:underline">タグ一覧</a>
 
                     {/* 全体に戻るボタン：Platform選択中のみ表示 */}
-                    {activePlatform && (
+                    {!activePlatform && (
                         <a
                             onClick={() => {
                                 localStorage.removeItem("selectedPlatform");
@@ -47,8 +48,8 @@ export default function Layout({ children }) {
             </header>
 
             <main className="max-w-6xl mx-auto p-4">
-                {/* ✅ Platform選択前のみ表示 */}
-                {!activePlatform && (
+                {/* ✅ トップページで かつ Platform選択前のみ表示 */}
+                {isTopPage && !activePlatform && (
                     <section className="mb-6">
                         <h2 className="text-lg font-bold text-gray-700 mb-3">プラットフォーム別まとめを見る</h2>
                         <div className="flex flex-wrap gap-4">

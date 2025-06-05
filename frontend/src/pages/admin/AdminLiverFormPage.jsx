@@ -4,6 +4,7 @@ import axios from "axios";
 import AdminFrame from "../../components/AdminFrame";
 
 export default function AdminLiverFormPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [groupId, setGroupId] = useState("");
@@ -18,8 +19,8 @@ export default function AdminLiverFormPage() {
 
     useEffect(() => {
         // 並列でAPIを呼び出す
-        const fetchGroups = axios.get("http://localhost:8000/api/groups.php");
-        const fetchPlatforms = axios.get("http://localhost:8000/api/platforms.php");
+        const fetchGroups = axios.get(`${baseUrl}/api/groups.php`);
+        const fetchPlatforms = axios.get(`${baseUrl}/api/platforms.php`);
 
         Promise.all([fetchGroups, fetchPlatforms])
             .then(([groupsRes, platformsRes]) => {
@@ -44,7 +45,7 @@ export default function AdminLiverFormPage() {
             platform_ids: platforms,
         };
 
-        axios.post("http://localhost:8000/api/livers.php", payload)
+        axios.post(`${baseUrl}/api/livers.php`, payload)
             .then((res) => {
                 console.log("登録成功:", res.data);
                 navigate("/admin/livers");
@@ -65,7 +66,7 @@ export default function AdminLiverFormPage() {
         setUploading(true);
 
         try {
-            const res = await axios.post("http://localhost:8000/api/upload-image.php", formData, {
+            const res = await axios.post(`${baseUrl}/api/upload-image.php`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }

@@ -5,6 +5,7 @@ import Image from '@tiptap/extension-image'
 import React, { useEffect } from "react";
 
 export default function RichTextEditor({ value, onChange }) {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -51,7 +52,7 @@ export default function RichTextEditor({ value, onChange }) {
                             formData.append("image", file);
 
                             try {
-                                const res = await fetch("http://localhost:8000/api/upload-image.php", {
+                                const res = await fetch(`${baseUrl}/api/upload-image.php`, {
                                     method: "POST",
                                     body: formData
                                 });

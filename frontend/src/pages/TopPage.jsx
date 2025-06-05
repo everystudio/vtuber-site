@@ -4,11 +4,10 @@ import SiteFrame from "../components/SiteFrame";
 import { Link, useParams } from "react-router-dom";
 
 export default function PlatformTopPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const { platform } = useParams(); // URLからプラットフォーム名を取得
     const storedPlatform = localStorage.getItem("selectedPlatform");
     const effectivePlatform = platform || storedPlatform;
-
-    const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
     const [articles, setArticles] = useState([]);
     const [ranking, setRanking] = useState([]);
@@ -48,7 +47,7 @@ export default function PlatformTopPage() {
 
             {/* 注目まとめ記事 */}
             <section>
-                <h2 className="text-xl font-bold mb-4 border-b pb-2">📰 注目のまとめ記事{baseUrl}</h2>
+                <h2 className="text-xl font-bold mb-4 border-b pb-2">📰 注目のまとめ記事</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {articles.slice(0, 6).map((article) => (
                         <Link

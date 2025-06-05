@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import SiteFrame from "../components/SiteFrame";
 
 const LiverList = () => {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const [livers, setLivers] = useState([]);
     const storedPlatform = localStorage.getItem("selectedPlatform");
 
@@ -11,8 +12,8 @@ const LiverList = () => {
         console.log("APIを呼び出します");
 
         const url = storedPlatform
-            ? `http://localhost:8000/api/livers.php?platform=${storedPlatform}`
-            : `http://localhost:8000/api/livers.php`;
+            ? `${baseUrl}/api/livers.php?platform=${storedPlatform}`
+            : `${baseUrl}/api/livers.php`;
 
         axios.get(url)
             .then((res) => {

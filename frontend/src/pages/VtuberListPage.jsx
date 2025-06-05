@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import SiteFrame from "../components/SiteFrame";
 
 const LiverList = () => { // VtuberListをLiverListに変更
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const [livers, setLivers] = useState([]); // vtubersをliversに変更
 
     useEffect(() => {
         console.log("APIを呼び出します");
-        axios.get("http://localhost:8000/api/livers.php")
+        axios.get(`${baseUrl}/api/livers.php`)
             .then((res) => {
                 console.log("APIからのレスポンス:", res.data);
                 setLivers(res.data); // vtubersをliversに変更

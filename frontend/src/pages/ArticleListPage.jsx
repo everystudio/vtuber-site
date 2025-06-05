@@ -6,6 +6,7 @@ import SiteFrame from "../components/SiteFrame";
 const ARTICLES_PER_PAGE = 30;
 
 export default function ArticleListPage() {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const [searchParams, setSearchParams] = useSearchParams();
     const currentPage = parseInt(searchParams.get("page")) || 1;
     const [articles, setArticles] = useState([]);
@@ -13,7 +14,7 @@ export default function ArticleListPage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/articles.php?page=${currentPage}&limit=${ARTICLES_PER_PAGE}`)
+        axios.get(`${baseUrl}/api/articles.php?page=${currentPage}&limit=${ARTICLES_PER_PAGE}`)
             .then((res) => {
                 setArticles(res.data.articles || []);
                 setTotalPages(Math.ceil(res.data.total / ARTICLES_PER_PAGE));

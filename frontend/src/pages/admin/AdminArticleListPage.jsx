@@ -13,13 +13,14 @@ export default function AdminArticleListPage() {
     const searchParams = new URLSearchParams(location.search);
     const initialPage = parseInt(searchParams.get("page") || "1", 10);
     const navigate = useNavigate();
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
     // React state初期化時に使用
     const [page, setPage] = useState(initialPage);
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/articles.php?page=${page}&limit=${limit}`)
+            .get(`${baseUrl}/api/articles.php?page=${page}&limit=${limit}`)
             .then((res) => {
                 setArticles(res.data.articles);
                 setTotal(res.data.total);

@@ -13,6 +13,7 @@ export default function ArticleFormPage() {
     const location = useLocation();
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
     // クエリパラメータを取得
     const searchParams = new URLSearchParams(location.search);
@@ -29,7 +30,7 @@ export default function ArticleFormPage() {
 
     useEffect(() => {
         if (id) {
-            axios.get(`http://localhost:8000/api/articles.php?id=${id}`)
+            axios.get(`${baseUrl}/api/articles.php?id=${id}`)
                 .then(res => {
                     setTitle(res.data.article.title);
                     setBody(res.data.article.body);
@@ -53,14 +54,14 @@ export default function ArticleFormPage() {
         const payload = { title, body, vtuber_id: 1 }; // 仮のVtuber ID
 
         if (id) {
-            axios.put(`http://localhost:8000/api/articles.php?id=${id}`, payload)
+            axios.put(`${baseUrl}/api/articles.php?id=${id}`, payload)
                 .then(() => navigate(`/article/${id}`))
                 .catch(err => {
                     console.error("記事更新失敗:", err);
                     alert("記事の更新に失敗しました。もう一度お試しください。");
                 });
         } else {
-            axios.post("http://localhost:8000/api/articles.php", payload)
+            axios.post(`${baseUrl}/api/articles.php`, payload)
                 .then(res => navigate(`/article/${res.data.id}`))
                 .catch(err => {
                     console.error("記事投稿失敗:", err);
