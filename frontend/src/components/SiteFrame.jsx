@@ -1,11 +1,12 @@
 // src/components/Layout.jsx
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 
 export default function Layout({ children }) {
     const { platform } = useParams();
     const storedPlatform = localStorage.getItem("selectedPlatform");
     const activePlatform = platform || storedPlatform;
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const isPlatformMode = !!activePlatform;
     const theme = activePlatform ? platformThemes[activePlatform] : null;
@@ -23,28 +24,50 @@ export default function Layout({ children }) {
                     </h1>
                 </div>
 
-                <nav className="space-x-4 text-gray-700">
-                    <a href="/" className="hover:underline">ホーム</a>
-                    <Link to="/livers" className="hover:underline">Liver一覧</Link>
-                    <a href="/articles/1" className="hover:underline">記事一覧</a>
-                    {/*
-                    <a href="/ranking" className="hover:underline">ランキング</a>
-                    */}
-                    <a href="/tags" className="hover:underline">タグ一覧</a>
+                {/* ハンバーガー（モバイルのみ） */}
+                <button
+                    className="sm:hidden text-gray-700"
+                    onClick={() => setMenuOpen(true)}
+                >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
 
-                    {/* 全体に戻るボタン：Platform選択中のみ表示 */}
-                    {!activePlatform && (
+                {/* オーバーレイ（クリックで閉じる） */}
+                {menuOpen && (
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                        onClick={() => setMenuOpen(false)}
+                    />
+                )}
+
+                {/* スライドメニュー（モバイルのみ） */}
+                <div className={`fixed top-0 right-0 h-full w-64 bg-white z-50 shadow-lg transform transition-transform duration-300 ease-in-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'
+                    } sm:hidden p-5 space-y-4`}
+                >
+                    <button
+                        onClick={() => setMenuOpen(false)}
+                        className="text-gray-500 hover:text-gray-800 text-right block ml-auto"
+                    >
+                        × 閉じる
+                    </button>
+                    <a href="/" className="block text-gray-800 font-semibold hover:underline">ホーム</a>
+                    <Link to="/livers" className="block text-gray-800 font-semibold hover:underline">Liver一覧</Link>
+                    <a href="/articles/1" className="block text-gray-800 font-semibold hover:underline">記事一覧</a>
+                    <a href="/tags" className="block text-gray-800 font-semibold hover:underline">タグ一覧</a>
+                    {activePlatform && (
                         <a
                             onClick={() => {
                                 localStorage.removeItem("selectedPlatform");
                                 window.location.href = "/";
                             }}
-                            className="cursor-pointer text-sm font-semibold text-blue-600 hover:underline hover:text-blue-700 transition"
+                            className="block text-blue-600 font-semibold hover:underline"
                         >
                             全体に戻る
                         </a>
                     )}
-                </nav>
+                </div>
             </header>
 
             <main className="max-w-6xl mx-auto p-4">
