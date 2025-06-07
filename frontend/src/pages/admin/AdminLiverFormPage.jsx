@@ -186,7 +186,7 @@ export default function AdminLiverFormPage() {
 
                     <div>
                         <label className="block font-semibold mb-1">プラットフォーム</label>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="grid grid-cols-4 gap-1">
                             {platformOptions.map((platform) => (
                                 <label key={platform.id} className="flex items-center space-x-2">
                                     <input
