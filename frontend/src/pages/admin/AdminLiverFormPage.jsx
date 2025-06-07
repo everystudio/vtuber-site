@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AdminFrame from "../../components/AdminFrame";
+import AdminLiverForm from "../../components/AdminLiverForm";
 
 export default function AdminLiverFormPage() {
     const baseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -93,7 +94,28 @@ export default function AdminLiverFormPage() {
         <AdminFrame>
             <div className="max-w-xl mx-auto p-6">
                 <h1 className="text-2xl font-bold mb-4">🎤 ライバー新規登録</h1>
-
+                <AdminLiverForm
+                    name={name}
+                    setName={setName}
+                    groupId={groupId}
+                    setGroupId={setGroupId}
+                    description={description}
+                    setDescription={setDescription}
+                    thumbnailUrl={thumbnailUrl}
+                    setThumbnailUrl={setThumbnailUrl}
+                    debutDate={debutDate}
+                    setDebutDate={setDebutDate}
+                    groups={groups}
+                    uploading={uploading}
+                    handleImageUpload={handleImageUpload}
+                    platforms={platforms}
+                    togglePlatform={togglePlatform}
+                    platformOptions={platformOptions}
+                    buttonLabel="登録する"
+                    onSubmit={handleSubmit}
+                    onCancel={() => navigate("/admin/livers")}
+                />
+                {/*
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block font-semibold mb-1">名前</label>
@@ -171,6 +193,7 @@ export default function AdminLiverFormPage() {
                         </button>
                     </div>
                 </form>
+*/}
             </div>
         </AdminFrame>
     );
