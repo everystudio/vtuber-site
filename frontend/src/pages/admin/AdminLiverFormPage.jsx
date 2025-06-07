@@ -1,59 +1,105 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import AdminFrame from "../../components/AdminFrame";
 import AdminLiverForm from "../../components/AdminLiverForm";
 
 export default function AdminLiverFormPage() {
-    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+    const { id } = useParams(); // ← idがあれば編集、なければ新規
+    const isEdit = !!id;
+
     const navigate = useNavigate();
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+
+    // 共通State
     const [name, setName] = useState("");
     const [groupId, setGroupId] = useState("");
     const [description, setDescription] = useState("");
-    const [youtubeUrl, setYoutubeUrl] = useState("");
     const [thumbnailUrl, setThumbnailUrl] = useState("");
     const [debutDate, setDebutDate] = useState("");
     const [groups, setGroups] = useState([]);
     const [uploading, setUploading] = useState(false);
     const [platforms, setPlatforms] = useState([]); // 選択された platform_id の配列
     const [platformOptions, setPlatformOptions] = useState([]);
+    const [linkTypeOptions, setLinkTypeOptions] = useState([]);
+    const [links, setLinks] = useState([]);
 
     useEffect(() => {
-        // 並列でAPIを呼び出す
-        const fetchGroups = axios.get(`${baseUrl}/api/groups.php`);
-        const fetchPlatforms = axios.get(`${baseUrl}/api/platforms.php`);
+        const fetchInitialData = async () => {
+            try {
+                const [groupRes, platformRes, linkTypeRes] = await Promise.all([
+                    axios.get(`${baseUrl}/api/groups.php`),
+                    axios.get(`${baseUrl}/api/platforms.php`),
+                    axios.get(`${baseUrl}/api/link_types.php`)
+                ]);
+                setGroups(groupRes.data);
+                setPlatformOptions(platformRes.data);
+                setLinkTypeOptions(linkTypeRes.data);
+            } catch (err) {
+                console.error("初期データ取得失敗:", err);
+            }
+        };
 
-        Promise.all([fetchGroups, fetchPlatforms])
-            .then(([groupsRes, platformsRes]) => {
-                setGroups(groupsRes.data);
-                setPlatformOptions(platformsRes.data);
-            })
-            .catch((err) => {
-                console.error("初期データ取得に失敗:", err);
-            });
+        fetchInitialData();
     }, []);
 
-    const handleSubmit = (e) => {
+    // 編集時、ライバーの情報を取得
+    useEffect(() => {
+        if (!isEdit || linkTypeOptions.length === 0) return;
+
+        axios.get(`${baseUrl}/api/livers.php?id=${id}`)
+            .then((res) => {
+                const data = res.data;
+
+                setName(data.name);
+                setGroupId(data.group_id ?? "");
+                setDescription(data.description ?? "");
+                setThumbnailUrl(data.thumbnail_url ?? "");
+                setDebutDate(data.debut_date ?? "");
+                setPlatforms(data.platform_ids ?? []);
+
+                // 🔽 文字列化してからセット
+                const fixedLinks = (data.links ?? []).map(link => ({
+                    ...link,
+                    link_type_id: link.link_type_id != null ? String(link.link_type_id) : ""
+                }));
+                setLinks(fixedLinks);
+            })
+            .catch((err) => {
+                console.error("ライバー取得失敗:", err);
+                alert("ライバー情報の取得に失敗しました");
+                navigate("/admin/livers");
+            });
+    }, [id, isEdit, linkTypeOptions]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const payload = {
+            id,
             name,
             group_id: groupId,
             description,
             thumbnail_url: thumbnailUrl,
             debut_date: debutDate,
             platform_ids: platforms,
+            links,
         };
 
-        axios.post(`${baseUrl}/api/livers.php`, payload)
-            .then((res) => {
-                console.log("登録成功:", res.data);
-                navigate("/admin/livers");
-            })
-            .catch((err) => {
-                console.error("登録失敗:", err);
-                alert("登録に失敗しました");
-            });
+        try {
+            if (isEdit) {
+                await axios.put(`${baseUrl}/api/livers.php`, payload);
+                alert("更新しました");
+            } else {
+                await axios.post(`${baseUrl}/api/livers.php`, payload);
+                alert("登録しました");
+            }
+            navigate("/admin/livers");
+        } catch (err) {
+            console.error("保存失敗:", err);
+            alert("保存に失敗しました");
+        }
+
     };
 
     const handleImageUpload = async (e) => {
@@ -90,32 +136,27 @@ export default function AdminLiverFormPage() {
         );
     };
 
+    const addLink = () => {
+        setLinks([...links, { url: "", link_type_id: "" }]);
+    };
+
+    const updateLink = (index, field, value) => {
+        const updated = [...links];
+        updated[index][field] = value;
+        setLinks(updated);
+    };
+
+    const removeLink = (index) => {
+        setLinks(links.filter((_, i) => i !== index));
+    };
+
     return (
         <AdminFrame>
             <div className="max-w-xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-4">🎤 ライバー新規登録</h1>
-                <AdminLiverForm
-                    name={name}
-                    setName={setName}
-                    groupId={groupId}
-                    setGroupId={setGroupId}
-                    description={description}
-                    setDescription={setDescription}
-                    thumbnailUrl={thumbnailUrl}
-                    setThumbnailUrl={setThumbnailUrl}
-                    debutDate={debutDate}
-                    setDebutDate={setDebutDate}
-                    groups={groups}
-                    uploading={uploading}
-                    handleImageUpload={handleImageUpload}
-                    platforms={platforms}
-                    togglePlatform={togglePlatform}
-                    platformOptions={platformOptions}
-                    buttonLabel="登録する"
-                    onSubmit={handleSubmit}
-                    onCancel={() => navigate("/admin/livers")}
-                />
-                {/*
+                <h1 className="text-2xl font-bold mb-4">
+                    🎤 {isEdit ? "ライバー編集" : "ライバー新規登録"}
+                </h1>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block font-semibold mb-1">名前</label>
@@ -174,6 +215,33 @@ export default function AdminLiverFormPage() {
                         <label className="block font-semibold mb-1">デビュー日</label>
                         <input type="date" value={debutDate} onChange={(e) => setDebutDate(e.target.value)} className="w-full border px-3 py-2 rounded" />
                     </div>
+                    <div>
+                        <label className="block font-semibold mb-1">関連リンク</label>
+                        {links.map((link, i) => (
+                            <div key={i} className="flex items-center gap-2 mb-2">
+                                <input
+                                    type="text"
+                                    placeholder="URL"
+                                    className="flex-1 border px-2 py-1 rounded"
+                                    value={link.url}
+                                    onChange={(e) => updateLink(i, "url", e.target.value)}
+                                />
+                                <select
+                                    value={String(link.link_type_id ?? "")}
+                                    onChange={(e) => updateLink(i, "link_type_id", e.target.value)}
+                                >
+                                    <option value="">選択</option>
+                                    {linkTypeOptions.map((type) => (
+                                        <option key={type.id} value={String(type.id)}>
+                                            {type.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <button type="button" onClick={() => removeLink(i)} className="text-red-600 hover:underline">削除</button>
+                            </div>
+                        ))}
+                        <button type="button" onClick={addLink} className="text-blue-600 hover:underline">＋リンクを追加</button>
+                    </div>
 
 
                     <div className="flex gap-4">
@@ -181,7 +249,7 @@ export default function AdminLiverFormPage() {
                             type="submit"
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                         >
-                            登録する
+                            {isEdit ? "更新する" : "登録する"}
                         </button>
 
                         <button
@@ -193,8 +261,8 @@ export default function AdminLiverFormPage() {
                         </button>
                     </div>
                 </form>
-*/}
-            </div>
-        </AdminFrame>
+
+            </div >
+        </AdminFrame >
     );
 }

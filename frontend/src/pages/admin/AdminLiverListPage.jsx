@@ -60,7 +60,7 @@ export default function AdminLiverListPage() {
                                 <td className="border px-4 py-2">{liver.debut_date}</td>
                                 <td className="border px-4 py-2 text-center">
                                     <Link
-                                        to={`/admin/livers/${liver.id}/edit`}
+                                        to={`/admin/livers/edit/${liver.id}`}
                                         className="text-blue-600 hover:underline"
                                     >
                                         編集

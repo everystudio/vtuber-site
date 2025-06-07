@@ -16,7 +16,6 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLiverListPage from "./pages/admin/AdminLiverListPage";
 import AdminLiverFormPage from "./pages/admin/AdminLiverFormPage";
-import AdminLiverEditPage from "./pages/admin/AdminLiverEditPage";
 import AdminArticleListPage from "./pages/admin/AdminArticleListPage";
 import AdminArticleFormPage from "./pages/admin/AdminArticleFormPage";
 
@@ -46,7 +45,7 @@ function App() {
           <Route path="/admin" element={isAuthenticated ? <AdminDashboard setIsAuthenticated={setIsAuthenticated} /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/livers" element={isAuthenticated ? <AdminLiverListPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/livers/new" element={isAuthenticated ? <AdminLiverFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/admin/livers/:id/edit" element={isAuthenticated ? <AdminLiverEditPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/livers/edit/:id" element={isAuthenticated ? <AdminLiverFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/articles" element={isAuthenticated ? <AdminArticleListPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/article/new" element={isAuthenticated ? <AdminArticleFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/article/edit/:id" element={isAuthenticated ? <AdminArticleFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />

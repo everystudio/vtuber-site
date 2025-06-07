@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             $stmt3 = $pdo->prepare("
                 SELECT 
                     liver_links.url,
+                    liver_links.link_type_id,
                     liver_links.display_order,
                     link_types.name,
                     link_types.icon_url
