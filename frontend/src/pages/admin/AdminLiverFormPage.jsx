@@ -186,17 +186,20 @@ export default function AdminLiverFormPage() {
 
                     <div>
                         <label className="block font-semibold mb-1">プラットフォーム</label>
-                        {platformOptions.map((platform) => (
-                            <label key={platform.id} className="block">
-                                <input
-                                    type="checkbox"
-                                    value={platform.id}
-                                    checked={platforms.includes(platform.id)}
-                                    onChange={() => togglePlatform(platform.id)}
-                                />
-                                <span className="ml-2">{platform.name}</span>
-                            </label>
-                        ))}
+                        <div className="flex flex-wrap gap-4">
+                            {platformOptions.map((platform) => (
+                                <label key={platform.id} className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        value={platform.id}
+                                        checked={platforms.includes(platform.id)}
+                                        onChange={() => togglePlatform(platform.id)}
+                                    />
+                                    <span>{platform.name}</span>
+                                </label>
+                            ))}
+                        </div>
+
                     </div>
 
                     <div>
