@@ -42,7 +42,6 @@ export default function AdminLiverEditPage() {
                 setName(data.name);
                 setGroupId(data.group_id ?? "");
                 setDescription(data.description ?? "");
-                setYoutubeUrl(data.youtube_url ?? "");
                 setThumbnailUrl(data.thumbnail_url ?? "");
                 setDebutDate(data.debut_date ?? "");
                 setPlatforms(data.platform_ids ?? []); // ← 中間テーブルと結合して配列で取得するようにする
@@ -73,7 +72,6 @@ export default function AdminLiverEditPage() {
             name,
             group_id: groupId,
             description,
-            youtube_url: youtubeUrl,
             thumbnail_url: thumbnailUrl,
             debut_date: debutDate,
             platform_ids: platforms,
@@ -163,11 +161,6 @@ export default function AdminLiverEditPage() {
                             ))}
                         </div>
 
-                    </div>
-
-                    <div>
-                        <label className="block font-semibold mb-1">YouTube URL</label>
-                        <input type="url" value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} className="w-full border px-3 py-2 rounded" />
                     </div>
 
                     <div>

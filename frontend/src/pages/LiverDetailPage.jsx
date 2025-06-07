@@ -44,12 +44,26 @@ export default function LiverDetailPage() {
 
                 <div className="mt-6">
                     <h3 className="text-lg font-semibold mb-2">リンク</h3>
-                    <ul className="text-blue-600 list-disc pl-5">
-                        <li><a href={liver.youtube_url} target="_blank" rel="noreferrer">YouTube</a></li>
-                        {liver.twitter_url && (
-                            <li><a href={liver.twitter_url} target="_blank" rel="noreferrer">Twitter</a></li>
-                        )}
-                    </ul>
+                    {liver.links && liver.links.length > 0 ? (
+                        <div className="flex flex-wrap gap-4">
+                            {liver.links.map((link, index) => (
+                                <a
+                                    key={index}
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 text-blue-600 hover:underline"
+                                >
+                                    {link.icon_url && (
+                                        <img src={link.icon_url} alt={link.name} className="w-5 h-5" />
+                                    )}
+                                    <span>{link.name}</span>
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500">リンクは登録されていません。</p>
+                    )}
                 </div>
 
                 <div className="mt-6">

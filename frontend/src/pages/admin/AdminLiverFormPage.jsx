@@ -39,7 +39,6 @@ export default function AdminLiverFormPage() {
             name,
             group_id: groupId,
             description,
-            youtube_url: youtubeUrl,
             thumbnail_url: thumbnailUrl,
             debut_date: debutDate,
             platform_ids: platforms,
@@ -135,11 +134,6 @@ export default function AdminLiverFormPage() {
                                 <span className="ml-2">{platform.name}</span>
                             </label>
                         ))}
-                    </div>
-
-                    <div>
-                        <label className="block font-semibold mb-1">YouTube URL</label>
-                        <input type="url" value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} className="w-full border px-3 py-2 rounded" />
                     </div>
 
                     <div>

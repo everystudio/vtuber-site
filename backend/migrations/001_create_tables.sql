@@ -37,7 +37,6 @@ INSERT IGNORE INTO platforms (id, name , slug) VALUES
 CREATE TABLE IF NOT EXISTS livers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    youtube_url VARCHAR(255),
     description TEXT,
     thumbnail_url VARCHAR(255),
     group_id INT DEFAULT NULL,
@@ -46,10 +45,10 @@ CREATE TABLE IF NOT EXISTS livers (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO livers (name, youtube_url, description, thumbnail_url)
+INSERT INTO livers (name,  description, thumbnail_url)
 VALUES
-('カモ田ぴよ', 'https://www.youtube.com/channel/xxx', '毎日12時から底辺雑談', 'kamotapiyo_thumb.png'),
-('底辺めがね', 'https://www.youtube.com/channel/yyy', 'マイクがノイズだらけ！でも熱意は本物！', 'teihen_megane_thumb.png');
+('カモ田ぴよ', '毎日12時から底辺雑談', 'kamotapiyo_thumb.png'),
+('底辺めがね', 'マイクがノイズだらけ！でも熱意は本物！', 'teihen_megane_thumb.png');
 
 CREATE TABLE liver_platform (
     liver_id INT NOT NULL,

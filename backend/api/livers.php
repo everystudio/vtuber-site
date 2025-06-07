@@ -34,6 +34,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             $platform_ids = $stmt2->fetchAll(PDO::FETCH_COLUMN);
             $data['platform_ids'] = $platform_ids;
 
+            // liver_linksテーブルとlink_typesをJOINしてリンクを取得
+            $stmt3 = $pdo->prepare("
+                SELECT 
+                    liver_links.url,
+                    liver_links.display_order,
+                    link_types.name,
+                    link_types.icon_url
+                FROM liver_links
+                JOIN link_types ON liver_links.link_type_id = link_types.id
+                WHERE liver_links.liver_id = ?
+                ORDER BY liver_links.display_order ASC
+            ");
+            $stmt3->execute([$id]);
+            $links = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+            $data['links'] = $links;
+
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
         } else {
             http_response_code(404);
@@ -113,16 +129,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     error_log("🔥 POST処理に入りました");
     $data = json_decode(file_get_contents("php://input"), true);
 
-    $youtubeUrl = !empty($data['youtube_url']) ? $data['youtube_url'] : null;
     $debutDate = !empty($data['debut_date']) ? $data['debut_date'] : null;
 
-    $stmt = $pdo->prepare("INSERT INTO livers (name, group_id, description, youtube_url, thumbnail_url, debut_date)
-        VALUES (:name, :group_id, :description, :youtube_url, :thumbnail_url, :debut_date)");
+    $stmt = $pdo->prepare("INSERT INTO livers (name, group_id, description, thumbnail_url, debut_date)
+        VALUES (:name, :group_id, :description, :thumbnail_url, :debut_date)");
 
     $stmt->bindParam(':name', $data['name']);
     $stmt->bindParam(':group_id', $data['group_id']);
     $stmt->bindParam(':description', $data['description']);
-    $stmt->bindParam(':youtube_url', $youtubeUrl);
     $stmt->bindParam(':thumbnail_url', $data['thumbnail_url']);
     $stmt->bindParam(':debut_date', $debutDate);
 
@@ -170,7 +184,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         exit();
     }
 
-    $youtubeUrl = !empty($data['youtube_url']) ? $data['youtube_url'] : null;
     $debutDate = !empty($data['debut_date']) ? $data['debut_date'] : null;
     $groupId = !empty($data['group_id']) ? $data['group_id'] : null;
 
@@ -179,7 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         name = :name,
         group_id = :group_id,
         description = :description,
-        youtube_url = :youtube_url,
         thumbnail_url = :thumbnail_url,
         debut_date = :debut_date
         WHERE id = :id
@@ -189,7 +201,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         ':name' => $data['name'],
         ':group_id' => $groupId,
         ':description' => $data['description'],
-        ':youtube_url' => $youtubeUrl,
         ':thumbnail_url' => $data['thumbnail_url'],
         ':debut_date' => $debutDate,
         ':id' => $id,
