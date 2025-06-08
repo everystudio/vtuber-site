@@ -11,6 +11,12 @@ $pdo = getPDO();
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
 
+// トップページのサイトを追加
+echo "<url>";
+echo "<loc>$host/</loc>";
+echo "<changefreq>daily</changefreq>";
+echo "</url>\n";
+
 // プラットフォームごとのトップページのリンクも作成する
 $stmt = $pdo->query("SELECT slug FROM platforms where is_active = 1");
 foreach ($stmt as $row) {
