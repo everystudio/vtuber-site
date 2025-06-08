@@ -5,7 +5,7 @@ loadEnv();
 
 header("Content-Type: application/xml; charset=utf-8");
 
-$host = getenv("SITE_DOMAIN"); // 本番ドメインに置き換え
+$host = 'https://' . getenv("SITE_DOMAIN"); // 本番ドメインに置き換え
 $pdo = getPDO();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
