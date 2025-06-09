@@ -42,8 +42,6 @@ export default function ArticleDetailPage() {
         navigate(`/article/edit/${id}`); // ← 編集ページにリダイレクト
     };
 
-
-
     if (!article) return <SiteFrame><p>読み込み中...</p></SiteFrame>;
 
     return (
@@ -64,17 +62,38 @@ export default function ArticleDetailPage() {
                         </div>
                     )}
                 </div>
-
-                {/* 投稿日 */}
-                <div className="text-sm text-gray-500">{article.date}</div>
-
                 {/* タイトル */}
                 <h1 className="text-2xl font-bold text-red-700 leading-snug">
                     {article.title}
                 </h1>
 
+                {/* 更新日 */}
+                <div className="text-sm text-gray-500">更新日：{article.updated_at}</div>
+
+                {/* ライバー簡易表示 */}
+                {article.liver_id && (
+                    <div className="flex items-center gap-4 mb-4">
+                        {article.thumbnail_url && (
+                            <img
+                                src={article.thumbnail_url}
+                                alt={article.liver_name}
+                                className="w-12 h-12 rounded-full object-cover border"
+                            />
+                        )}
+                        <div>
+                            <p className="text-sm text-gray-600">この記事のライバー</p>
+                            <button
+                                onClick={() => navigate(`/liver/${article.liver_id}`)}
+                                className="text-blue-600 font-semibold hover:underline"
+                            >
+                                {article.liver_name}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {/* サムネイル画像 */}
-                <img src={article.thumbnailUrl} alt="記事サムネイル" className="w-full rounded shadow" />
+                <img src={article.thumbnail_url} alt="記事サムネイル" className="w-full rounded shadow" />
 
                 {/* 本文 */}
                 <div className="prose max-w-none text-base leading-relaxed text-gray-800">

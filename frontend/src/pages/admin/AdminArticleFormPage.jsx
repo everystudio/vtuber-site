@@ -14,6 +14,9 @@ export default function ArticleFormPage() {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [liverName, setLiverName] = useState("");
+    const [thumbnailUrl, setThumbnailUrl] = useState("");
+    const [uploading, setUploading] = useState(false);
+
     const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
     // クエリパラメータを取得
@@ -36,6 +39,7 @@ export default function ArticleFormPage() {
                     setTitle(res.data.article.title);
                     setBody(res.data.article.body);
                     setLiverName(res.data.article.liver_name || "（不明）"); // ← ここ
+                    setThumbnailUrl(res.data.article.thumbnail_url || "");
                 })
                 .catch(err => console.error("記事取得失敗:", err));
         }
@@ -61,7 +65,8 @@ export default function ArticleFormPage() {
         const payload = {
             title,
             body,
-            liver_id: liver_id
+            liver_id: liver_id,
+            thumbnail_url: thumbnailUrl
         };
 
         if (id) {
@@ -78,6 +83,30 @@ export default function ArticleFormPage() {
                     console.error("記事投稿失敗:", err);
                     alert("記事の投稿に失敗しました。もう一度お試しください。");
                 });
+        }
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        setUploading(true);
+
+        try {
+            const res = await axios.post(`${baseUrl}/api/upload-image.php`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            setThumbnailUrl(res.data.url);
+        } catch (err) {
+            console.error("画像アップロード失敗:", err);
+            alert("画像のアップロードに失敗しました");
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -100,6 +129,18 @@ export default function ArticleFormPage() {
                         placeholder="記事のタイトルを入力してください"
                     />
                 </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">サムネイル画像</label>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="mb-2" />
+                    {uploading && <p className="text-sm text-gray-500">アップロード中...</p>}
+                    {thumbnailUrl && (
+                        <div className="mb-2">
+                            <img src={thumbnailUrl} alt="サムネイル" className="w-64 h-auto border rounded shadow" />
+                            <p className="text-sm text-gray-600 break-all">{thumbnailUrl}</p>
+                        </div>
+                    )}
+                </div>
+
                 <div className="mb-4">
                     <label className="block text-gray-700 mb-2">本文</label>
                     <RichTextEditor value={body} onChange={setBody} />

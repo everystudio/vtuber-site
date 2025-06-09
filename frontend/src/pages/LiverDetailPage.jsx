@@ -74,14 +74,14 @@ export default function LiverDetailPage() {
                                 <a href={`/article/${article.id}`} className="block">
                                     <div key={article.id} className="bg-white rounded shadow p-4">
                                         <img
-                                            src={article.thumbnail_url ? `/images/${article.thumbnail_url}` : "/images/default.png"}
+                                            src={article.thumbnail_url ? `${article.thumbnail_url}` : "/images/default.png"}
                                             alt={article.title}
                                             className="w-full h-32 object-cover rounded mb-2"
                                         />
                                         <p className="text-blue-600 hover:underline font-semibold block mb-1">
                                             {article.title}
                                         </p>
-                                        <p className="text-sm text-gray-500 mb-2">{article.date}</p>
+                                        <p className="text-sm text-gray-500 mb-2">{article.updated_at}</p>
                                         <div className="flex flex-wrap gap-2">
                                             {article.tags.map(tag => (
                                                 <span key={tag} className="text-xs bg-gray-200 rounded px-2 py-1">{tag}</span>

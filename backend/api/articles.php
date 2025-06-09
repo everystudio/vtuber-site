@@ -46,7 +46,7 @@ try {
             // 単体取得
             error_log("🔥 単体取得処理に入りました");
             $stmt = $pdo->prepare('
-                SELECT a.*, l.name AS liver_name
+                SELECT a.*, l.name AS liver_name , l.thumbnail_url AS f
                 FROM articles a
                 LEFT JOIN livers l ON a.liver_id = l.id
                 WHERE a.id = :id
@@ -134,13 +134,14 @@ try {
         $body = $data['body'] ?? '';
         $created_at = date('Y-m-d H:i:s');
         $liver_id = $data['liver_id'] ?? null;
+        $thumbnail_url = $data['thumbnail_url'] ?? null;
 
-
-        $stmt = $pdo->prepare("INSERT INTO articles (title, body, created_at, liver_id) VALUES (:title, :body, :created_at, :liver_id)");
+        $stmt = $pdo->prepare("INSERT INTO articles (title, body, created_at, liver_id, thumbnail_url) VALUES (:title, :body, :created_at, :liver_id, :thumbnail_url)");
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':body', $body);
         $stmt->bindParam(':created_at', $created_at);
         $stmt->bindParam(':liver_id', $liver_id, PDO::PARAM_INT);
+        $stmt->bindParam(':thumbnail_url', $thumbnail_url);
 
         if ($stmt->execute()) {
             echo json_encode(['id' => $pdo->lastInsertId()]);
@@ -153,12 +154,14 @@ try {
         $data = json_decode(file_get_contents("php://input"), true);
         $title = $data['title'] ?? '';
         $body = $data['body'] ?? '';
+        $thumbnail_url = $data['thumbnail_url'] ?? null;
 
-        $stmt = $pdo->prepare("UPDATE articles SET title = :title, body = :body WHERE id = :id");
+        $stmt = $pdo->prepare("UPDATE articles SET title = :title, body = :body, thumbnail_url = :thumbnail_url WHERE id = :id");
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':body', $body);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
+        $stmt->bindParam(':thumbnail_url', $thumbnail_url);
+        
         if ($stmt->execute()) {
             echo json_encode(['success' => true]);
         } else {

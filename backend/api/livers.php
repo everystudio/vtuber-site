@@ -168,6 +168,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Linksの登録
+    if (!empty($data['links']) && is_array($data['links'])) {
+        $stmt = $pdo->prepare("INSERT INTO liver_links (liver_id, url, link_type_id, display_order) VALUES (?, ?, ?, ?)");
+        foreach ($data['links'] as $i => $link) {
+            $stmt->execute([
+                $liverId,
+                $link['url'] ?? '',
+                $link['link_type_id'] ?? 0,
+                $i
+            ]);
+        }
+    }
+
+
     echo json_encode(['success' => true]);
     exit();
 }
@@ -231,6 +245,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             }
         }
     }
+
+    // 既存リンクを一度削除して再登録
+    $pdo->prepare("DELETE FROM liver_links WHERE liver_id = ?")->execute([$id]);
+
+    if (!empty($data['links']) && is_array($data['links'])) {
+        $stmt = $pdo->prepare("INSERT INTO liver_links (liver_id, url, link_type_id, display_order) VALUES (?, ?, ?, ?)");
+        foreach ($data['links'] as $i => $link) {
+            $stmt->execute([
+                $id,
+                $link['url'] ?? '',
+                $link['link_type_id'] ?? 0,
+                $i
+            ]);
+        }
+    }    
 
     echo json_encode(['success' => true]);
     exit();
