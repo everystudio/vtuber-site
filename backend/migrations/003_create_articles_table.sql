@@ -5,7 +5,6 @@ CREATE TABLE articles (
     title VARCHAR(255) NOT NULL,
     body TEXT NOT NULL,
     content TEXT NOT NULL,
-    date DATE NOT NULL,
     tags JSON,
     likes INT DEFAULT 0,
     thumbnail_url VARCHAR(255),

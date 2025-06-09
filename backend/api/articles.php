@@ -5,6 +5,9 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
+// タイムゾーンを日本時間に設定
+date_default_timezone_set('Asia/Tokyo');
+
 // OPTIONSリクエストはここで終了
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

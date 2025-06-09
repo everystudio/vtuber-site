@@ -36,7 +36,7 @@ try {
         $platformId = $platformRow['id'];
         // JOINでplatformに属するliverの記事だけ取得
         $stmt = $pdo->prepare("
-            SELECT a.id, a.liver_id, a.related_liver_id, a.title, a.content, a.date, a.tags, a.likes, a.thumbnail_url
+            SELECT a.id, a.liver_id, a.related_liver_id, a.title, a.content, a.updated_at, a.tags, a.likes, a.thumbnail_url
             FROM articles a
             JOIN liver_platform lp ON a.liver_id = lp.liver_id
             WHERE lp.platform_id = :platform_id
@@ -47,7 +47,7 @@ try {
     else {
         error_log("🔥 top.php: platformが指定されていません。全ての記事を取得します。");
         // SQL クエリ
-        $stmt = $pdo->prepare("SELECT id, liver_id, related_liver_id, title, content, date, tags, likes, thumbnail_url FROM articles");
+        $stmt = $pdo->prepare("SELECT id, liver_id, related_liver_id, title, content, updated_at, tags, likes, thumbnail_url FROM articles");
     }
 
     $stmt->execute();
