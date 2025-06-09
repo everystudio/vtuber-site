@@ -40,6 +40,7 @@ try {
             FROM articles a
             JOIN liver_platform lp ON a.liver_id = lp.liver_id
             WHERE lp.platform_id = :platform_id
+            ORDER BY a.updated_at DESC
         ");
         $stmt->bindParam(':platform_id', $platformId);
 
@@ -73,7 +74,7 @@ try {
             FROM livers l
             JOIN liver_platform lp ON l.id = lp.liver_id
             WHERE lp.platform_id = :platform_id
-            ORDER BY l.created_at DESC
+            ORDER BY l.updated_at DESC
             LIMIT 5
         ");
         $stmtHotLivers->bindParam(':platform_id', $platformId);
@@ -82,7 +83,7 @@ try {
         $stmtHotLivers = $pdo->query("
             SELECT id, name, thumbnail_url 
             FROM livers 
-            ORDER BY created_at DESC 
+            ORDER BY updated_at DESC 
             LIMIT 5
         ");
     }
