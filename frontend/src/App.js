@@ -47,7 +47,7 @@ function App() {
           <Route path="/admin/livers/new" element={isAuthenticated ? <AdminLiverFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/livers/edit/:id" element={isAuthenticated ? <AdminLiverFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/articles" element={isAuthenticated ? <AdminArticleListPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/admin/article/new" element={isAuthenticated ? <AdminArticleFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/admin/article/new/:liver_id?" element={isAuthenticated ? <AdminArticleFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/admin/article/edit/:id" element={isAuthenticated ? <AdminArticleFormPage /> : <AdminLogin setIsAuthenticated={setIsAuthenticated} />} />
 
           {/* <Route path="/admin/articles" element={<AdminArticleListPage />} /> */}

@@ -65,6 +65,12 @@ export default function AdminLiverListPage() {
                                     >
                                         編集
                                     </Link>
+                                    <Link
+                                        to={`/admin/article/new/${liver.id}`}
+                                        className="text-blue-600 hover:underline"
+                                    >
+                                        記事
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

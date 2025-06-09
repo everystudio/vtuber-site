@@ -42,13 +42,20 @@ try {
         if ($id > 0) {
             // 単体取得
             error_log("🔥 単体取得処理に入りました");
-            $stmt = $pdo->prepare('SELECT * FROM articles WHERE id = :id');
+            $stmt = $pdo->prepare('
+                SELECT a.*, l.name AS liver_name
+                FROM articles a
+                LEFT JOIN livers l ON a.liver_id = l.id
+                WHERE a.id = :id
+            ');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();            $article = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute();
+            $article = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($article) {
                 processTags($article);
             }
+
             //unset($article);
 
             // 単体の記事をerror_logに出力
@@ -104,14 +111,15 @@ try {
         } else if ($liver_id === 0) {
             // 全件取得
             error_log("🔥 全件取得処理に入りました");
-            $stmt = $pdo->query('SELECT * FROM articles ORDER BY created_at DESC');            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $pdo->query('SELECT * FROM articles ORDER BY created_at DESC');
+            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($articles as &$article) {
                 processTags($article);
             }
             unset($article);
 
-            echo json_encode(['articles' => $articles]);            
+            echo json_encode(['articles' => $articles]);
 
         } else {
             echo json_encode(['error' => 'パラメータが不足しています']);

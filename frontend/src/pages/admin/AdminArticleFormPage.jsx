@@ -8,11 +8,12 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 export default function ArticleFormPage() {
-    const { id } = useParams();
+    const { id, liver_id, liver_name } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
+    const [liverName, setLiverName] = useState("");
     const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
     // クエリパラメータを取得
@@ -34,15 +35,21 @@ export default function ArticleFormPage() {
                 .then(res => {
                     setTitle(res.data.article.title);
                     setBody(res.data.article.body);
-                    // bodyのデータをエディタに反映（editorがreadyになってから）
-                    /*if (editor) {
-                        editor.commands.setContent(res.data.article.body);
-                    }
-                        */
+                    setLiverName(res.data.article.liver_name || "（不明）"); // ← ここ
                 })
                 .catch(err => console.error("記事取得失敗:", err));
         }
     }, [id, editor]);
+
+    useEffect(() => {
+        if (!id && liver_id) {
+            axios.get(`${baseUrl}/api/livers.php?id=${liver_id}`)
+                .then(res => {
+                    setLiverName(res.data.name);
+                })
+                .catch(err => console.error("ライバー情報取得失敗:", err));
+        }
+    }, [id, liver_id]);
 
     useEffect(() => {
         if (editor && body) {
@@ -51,7 +58,11 @@ export default function ArticleFormPage() {
     }, [editor, body]);
 
     const handleSubmit = () => {
-        const payload = { title, body, vtuber_id: 1 }; // 仮のVtuber ID
+        const payload = {
+            title,
+            body,
+            liver_id: liver_id
+        };
 
         if (id) {
             axios.put(`${baseUrl}/api/articles.php?id=${id}`, payload)
@@ -74,6 +85,11 @@ export default function ArticleFormPage() {
         <AdminFrame>
             <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
                 <h1 className="text-2xl font-bold mb-4">{id ? "記事を編集" : "新しい記事を投稿"}</h1>
+                {liverName && (
+                    <div className="mb-4 text-gray-800 font-semibold">
+                        対象ライバー: <span className="text-blue-600">{liverName}</span>
+                    </div>
+                )}
                 <div className="mb-4">
                     <label className="block text-gray-700 mb-2">タイトル</label>
                     <input
