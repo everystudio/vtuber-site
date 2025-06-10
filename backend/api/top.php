@@ -14,6 +14,7 @@ try {
 
     // GETパラメータからplatformを取得（例: mirrative）
     $platform = $_GET['platform'] ?? null;
+    $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 30;
 
     if($platform){
         error_log("🔥 top.php: platformが指定されました: " . $platform);
@@ -41,6 +42,7 @@ try {
             JOIN liver_platform lp ON a.liver_id = lp.liver_id
             WHERE lp.platform_id = :platform_id
             ORDER BY a.updated_at DESC
+            LIMIT :limit
         ");
         $stmt->bindParam(':platform_id', $platformId);
 
@@ -48,8 +50,23 @@ try {
     else {
         error_log("🔥 top.php: platformが指定されていません。全ての記事を取得します。");
         // SQL クエリ
-        $stmt = $pdo->prepare("SELECT id, liver_id, related_liver_id, title, content, updated_at, tags, likes, thumbnail_url FROM articles");
+        $stmt = $pdo->prepare("
+            SELECT
+                id,
+                liver_id,
+                related_liver_id,
+                title,
+                content,
+                updated_at,
+                tags,
+                likes,
+                thumbnail_url
+            FROM articles
+            ORDER BY updated_at DESC
+            LIMIT :limit
+        ");
     }
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 
     $stmt->execute();
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
